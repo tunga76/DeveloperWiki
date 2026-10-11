@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the Developer Wiki off-site database backup on schedule
+
+[Timer]
+OnCalendar=*-*-* 02:15:00
+RandomizedDelaySec=30m
+Persistent=true
+Unit=developer-wiki-backup.service
+
+[Install]
+WantedBy=timers.target
