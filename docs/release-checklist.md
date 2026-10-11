@@ -15,7 +15,8 @@
 ## Operasyon
 
 - [ ] Operasyon sahibi, staging/production adresleri, SLA, RPO ve RTO kararlaştırıldı.
-- [ ] Şifreli off-host PostgreSQL ve nesne yedekleri çalışır; saklama ve erişim politikası belirlenmiştir.
+- [x] Şifreli off-host PostgreSQL akışı `scripts/backup-postgres-offsite.sh` ile eklendi; age şifrelemesi, checksum sidecar ve remote object check mock CLI'larla doğrulandı.
+- [ ] Gerçek bucket/age anahtarı ile zamanlama, lifecycle/erişim politikası ve başarılı ilk yedek operatör ortamında yapılandırılıp doğrulanmalı. MinIO dosya eki akışı uygulamaya alındığında nesne yedeği ayrıca doğrulanmalı.
 - [ ] `docs/operations/backup-restore.md` izole ortamda tatbik edildi; süre ve sonuç kaydedildi.
 - [ ] Grafana/Prometheus panoları erişilebilir; Prometheus alert rules ve notification routing doğrulandı; nöbet/olay sahibi atanmıştır.
 - [ ] Staging deploy, auth/content smoke ve performans ölçümü tamamlanmıştır.
@@ -23,4 +24,4 @@
 
 ## Mevcut release engelleri
 
-Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatılması ve API/DB/MinIO/Grafana secret dosyalarını bağlama desteği sağlar. Bu repository'de gerçek staging/production ortamı veya secret manager bağlantısı yok. Off-host yedek hedefi, geri yükleme tatbikatı, SLA/RPO/RTO, TLS host adı, operasyon sahibi ve MinIO image tedarik zinciri onayı da tanımlı değil. Bu maddeler tamamlanmadan checklist production-ready olarak işaretlenemez.
+Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatılması ve API/DB/MinIO/Grafana secret dosyalarını bağlama desteği sağlar. Şifreli PostgreSQL backup script'i S3 uyumlu off-host hedefe yükleme ve checksum sidecar doğrulaması sağlar; gerçek bucket/kimlik bilgisi/lifecycle ile çalıştırılmadı. Bu repository'de gerçek staging/production ortamı veya secret manager bağlantısı yok. Restore tatbikatı, SLA/RPO/RTO, TLS host adı, operasyon sahibi, Alertmanager receiver ve MinIO image tedarik zinciri onayı operatör girdisi bekliyor. Bu maddeler tamamlanmadan checklist production-ready olarak işaretlenemez.

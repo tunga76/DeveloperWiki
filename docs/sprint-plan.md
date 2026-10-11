@@ -111,6 +111,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 4 (2026-10-11):** Production Grafana/Prometheus erişimi için loopback-only Compose overlay ve SSH tunnel yönergesi, Alertmanager için provider-neutral receiver config örneği ve opt-in Compose katmanı eklendi. CI ana ve Alertmanager-enabled Compose konfigürasyonlarını kontrol eder. Gerçek receiver URL'si, Alertmanager image digest'i, SSH erişimi ve on-call sahibi operatör girdisi bekliyor.
 
+**Release readiness devam işi 5 (2026-10-11):** PostgreSQL custom dump'ını hostta plaintext dosyaya yazmadan age ile şifreleyip S3 uyumlu off-host hedefe yükleyen, SHA-256 sidecar üreten ve iki nesnenin varlığını doğrulayan `scripts/backup-postgres-offsite.sh` eklendi. Backup/restore runbook'u şifreli akış ve key ayrımını anlatıyor. Git Bash `bash -n` ve sahte Docker/age/AWS komutlarıyla backup flow kontrolü geçti; Alertmanager ve ops erişim dahil production Compose config kontrolü geçti. Script henüz gerçek bucket/identity ile çalıştırılmadı; lifecycle, IAM, zamanlama, MinIO nesne yedeği ve restore tatbikatı operatör ortamı bekliyor.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar

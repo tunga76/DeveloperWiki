@@ -64,6 +64,7 @@ jobs:
         env:
           DEPLOY_ENV_FILE: ${{ runner.temp }}/developer-wiki-deploy.env
         run: |
+          bash -n scripts/backup-postgres-offsite.sh
           image_digest="sha256:$(printf '0%.0s' {1..64})"
           cat > "$DEPLOY_ENV_FILE" <<EOF
           SITE_ADDRESS=wiki.example.test
