@@ -11,6 +11,20 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: developer_wiki_ci
+          POSTGRES_USER: developer_wiki_ci
+          POSTGRES_PASSWORD: ci-only-migration-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U developer_wiki_ci -d developer_wiki_ci"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -20,6 +34,10 @@ jobs:
         with:
           version: 10.9.0
       - run: pnpm install --frozen-lockfile
+      - name: Apply migrations to a fresh PostgreSQL instance
+        run: pnpm --filter @developer-wiki/api prisma:deploy
+        env:
+          DATABASE_URL: postgresql://developer_wiki_ci:ci-only-migration-password@127.0.0.1:5432/developer_wiki_ci?schema=public
       - name: Dependency vulnerability audit
         run: pnpm audit --audit-level high
       - run: pnpm --filter @developer-wiki/api prisma:generate
@@ -57,7 +75,7 @@ jobs:
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: developer-wiki-api:ci
-          version: 0.75.0
+          version: v0.75.0
           severity: CRITICAL,HIGH
           timeout: 10m
           format: json
@@ -69,7 +87,7 @@ jobs:
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: developer-wiki-web:ci
-          version: 0.75.0
+          version: v0.75.0
           severity: CRITICAL,HIGH
           timeout: 10m
           format: json

@@ -127,6 +127,10 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 12 (2026-10-11):** `51b9147` run'ında aynı API Trivy exit-code hatası tekrarlandı; diğer dört CI job'u geçti. CI action'ı için JSON raporu ve her iki imajı da özetleyen annotation adımı eklendi; sonraki run bulgu paketlerini veya rapor üretilmemesini gösterecek. Ayrıca disposable PostgreSQL 17 + MinIO ortamında gerçek script ile age şifreli dump, S3-compatible upload, checksum doğrulaması ve ayrı DB restore'u tamamlandı; 9 saniyelik süre tek satırlık fixture ölçümüdür ve RTO sayılmaz. Test kimlikleri, konteynerler ve geçici volume'lar tatbikat sonrası temizlendi.
 
+**Release readiness devam işi 13 (2026-10-11):** Dört Prisma migration'ı disposable boş PostgreSQL 17 üzerinde uygulandı; `migrate deploy` ve ardından `migrate status` başarılı, schema up to date. Bu kontrol kalite CI job'una ephemeral PostgreSQL service ve clean-database migration step'i olarak eklendi. Staging snapshot yedeğiyle migration/rollback provası hâlâ gerçek staging verisi ve operatör prosedürü gerektiriyor.
+
+**Release readiness devam işi 14 (2026-10-11):** `ad66d71` scan diagnostic adımı her iki Trivy raporunun da üretilmediğini gösterdi; Trivy setup input'unda release sürümü `v` önekiyle bekleniyor. Workflow `v0.75.0` biçimine düzeltildi. Sonraki Actions run'ında container-scan ve eklenen clean-database migration adımı doğrulanacak.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar
