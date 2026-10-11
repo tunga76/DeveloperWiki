@@ -3,6 +3,7 @@
 ## Uygulama ve güvenlik
 
 - [ ] CI lint/typecheck/build/API testleri başarılı; dependency audit ve API/web container scan sonuçları gözden geçirildi.
+- [x] GitHub Actions checkout, setup-node ve Trivy action referansları değişmez commit SHA'larına pinlendi.
 - [x] Playwright suite kayıt/workspace, login/profil/tema/çıkış, kategori/doküman editörü/sürüm ve arama/favori ana akışlarını kapsıyor; CI browser job'u eklendi.
 - [ ] Son `master` commit'i için GitHub browser E2E job'u yeşil.
 - [ ] Production `JWT_SECRET` secret manager'dan gelir ve en az 32 rastgele karakterdir; yerel Compose varsayılanları kullanılmaz.

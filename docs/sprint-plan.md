@@ -115,7 +115,9 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 6 (2026-10-11):** Incident response runbook'u, iletişim durumu şablonu, deploy rollback, veri olayı ve restore adımları eklendi. Release checklist şablonun varlığını tamamlanmış, owner/channel/update cadence ve incident plan onayını operatör girdisi olarak ayırıyor.
 
-**Release readiness devam işi 7 (2026-10-11):** Playwright 1.64.0 root dev dependency olarak lockfile'a eklendi; Chromium CI job'u ve dört tarayıcı senaryosu yazıldı: landing/register/workspace/dashboard, login/profile/theme/logout, category/document create-edit/version/favorite, search/favorites. Yerel Chromium koşusu 4/4 geçti. GitHub Actions job sonucu son push sonrasında doğrulanmalı.
+**Release readiness devam işi 7 (2026-10-11):** Playwright 1.64.0 root dev dependency olarak lockfile'a eklendi; Chromium CI job'u ve dört mock API tarayıcı senaryosu yazıldı: landing/register/workspace/dashboard, login/profile/theme/logout, category/document create-edit/version/favorite, search/favorites. Frozen lockfile install, E2E TypeScript kontrolü, format ve yerel Chromium koşusu (4/4) geçti. GitHub Actions job sonucu son push sonrasında doğrulanmalı; gerçek API/DB entegrasyonu API testlerinde kalıyor.
+
+**Release readiness devam işi 8 (2026-10-11):** CI'daki checkout, setup-node ve Trivy action'ları resmi tag release commit SHA'larına pinlendi. Güncel workflow'da hareketli action tag'i kalmadı.
 
 ## Story örnekleri
 

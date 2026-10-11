@@ -21,12 +21,16 @@ API'yi host üzerinde geliştirme modunda çalıştırmak için önce PostgreSQL
 
 ## Root komutları
 
-| Komut                     | Açıklama                                        |
-| ------------------------- | ----------------------------------------------- |
-| `corepack pnpm dev`       | Web/API uygulamalarını izleme modunda başlatır. |
-| `corepack pnpm build`     | Web/API/paket derlemelerini çalıştırır.         |
-| `corepack pnpm lint`      | Kaynak dosyaların Prettier biçimini denetler.   |
-| `corepack pnpm typecheck` | Workspace tip kontrollerini çalıştırır.         |
+| Komut                         | Açıklama                                                |
+| ----------------------------- | ------------------------------------------------------- |
+| `corepack pnpm dev`           | Web/API uygulamalarını izleme modunda başlatır.         |
+| `corepack pnpm build`         | Web/API/paket derlemelerini çalıştırır.                 |
+| `corepack pnpm lint`          | Kaynak dosyaların Prettier biçimini denetler.           |
+| `corepack pnpm typecheck`     | Workspace tip kontrollerini çalıştırır.                 |
+| `corepack pnpm test:e2e`      | Chromium ile mocked API browser akışlarını çalıştırır.  |
+| `corepack pnpm typecheck:e2e` | Playwright config ve senaryolarının tiplerini denetler. |
+
+Tarayıcı testlerini ilk kez çalıştırmadan önce `corepack pnpm exec playwright install chromium` komutuyla Playwright Chromium'u kurun. Testler web dev server'ını `127.0.0.1:3100` üzerinde kendileri başlatır ve API yanıtlarını senaryo içinde mock'lar; API/DB davranışı ayrıca API testleriyle doğrulanır.
 
 ## Dosya ağacı
 
