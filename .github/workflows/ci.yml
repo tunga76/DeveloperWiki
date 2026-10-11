@@ -54,17 +54,21 @@ jobs:
       - name: Build web image
         run: docker build -f infrastructure/docker/Dockerfile.web -t developer-wiki-web:ci .
       - name: Scan API image
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # 0.33.1
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: developer-wiki-api:ci
+          version: 0.75.0
           severity: CRITICAL,HIGH
+          timeout: 10m
           exit-code: "1"
           ignore-unfixed: true
       - name: Scan web image
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # 0.33.1
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: developer-wiki-web:ci
+          version: 0.75.0
           severity: CRITICAL,HIGH
+          timeout: 10m
           exit-code: "1"
           ignore-unfixed: true
 

@@ -123,6 +123,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 10 (2026-10-11):** Son Actions run'ında Corepack ile pnpm install adımı Linux runner'da başarısız oldu; pnpm 10.9.0 resmi action ile kurulacak şekilde değiştirildi. Checkout/setup-node action'ları güncel Node 24 destekli release commit SHA'larına yükseltildi. API runtime imajı pnpm production deploy ağacını kullanıyor; migration CLI production bağımlılığına alındı ve Prisma'nın taramada kalan transitive paketleri patched sürümlere override edildi. Node runtime'ında kullanılmayan global npm/npx, API ve web runtime imajlarından kaldırıldı. Lokal API testleri (21/21), workspace typecheck/build, E2E typecheck ve browser senaryoları (4/4) geçti; API ve web production image taramalarında CRITICAL/HIGH bulgu kalmadı. GitHub Actions'ta yeniden doğrulama push sonrası bekliyor.
 
+**Release readiness devam işi 11 (2026-10-11):** `69e8242` run'ında quality, Compose, monitoring ve browser E2E başarılı; Trivy API adımı genel exit-code hatası verdi ve annotation paket ayrıntısı içermedi. Son imaj Trivy 0.65.0, 0.69.3 ve 0.75.0 ile yerelde tarandı; CRITICAL/HIGH bulgu yok. CI Trivy action'ı güncel `v0.36.0` commit SHA'sına yükseltildi, scanner `0.75.0` ve 10 dakikalık timeout sabitlendi. Bu tarama sonucu yeni Actions run'ında doğrulanacak.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar
