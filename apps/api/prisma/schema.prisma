@@ -1,0 +1,155 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum WorkspaceRole {
+  ADMIN
+  EDITOR
+  READER
+}
+
+model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  workspaceId String     @db.Uuid
+  name        String     @db.VarChar(120)
+  slug        String     @db.VarChar(120)
+  description String?    @db.VarChar(500)
+  color       String?    @db.VarChar(7)
+  createdById String     @db.Uuid
+  updatedById String     @db.Uuid
+  createdAt   DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime   @updatedAt @db.Timestamptz(3)
+  deletedAt   DateTime?  @db.Timestamptz(3)
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  documents   Document[]
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, deletedAt, name])
+}
+
+model Document {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @db.Uuid
+  categoryId  String    @db.Uuid
+  title       String    @db.VarChar(200)
+  slug        String    @db.VarChar(180)
+  content     String    @default("") @db.Text
+  createdById String    @db.Uuid
+  updatedById String    @db.Uuid
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(3)
+  deletedAt   DateTime? @db.Timestamptz(3)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  category    Category  @relation(fields: [categoryId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+  versions    DocumentVersion[]
+  favorites   Favorite[]
+  recentViews RecentDocument[]
+
+  @@unique([id, workspaceId])
+  @@index([workspaceId, deletedAt, updatedAt])
+  @@index([categoryId, workspaceId, deletedAt])
+}
+
+model DocumentVersion {
+  id          String   @id @default(uuid()) @db.Uuid
+  documentId  String   @db.Uuid
+  version     Int
+  title       String   @db.VarChar(200)
+  content     String   @db.Text
+  createdById String   @db.Uuid
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Restrict)
+
+  @@unique([documentId, version])
+  @@index([documentId, createdAt])
+}
+
+model Favorite {
+  userId      String   @db.Uuid
+  documentId  String   @db.Uuid
+  workspaceId String   @db.Uuid
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document    Document @relation(fields: [documentId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@id([userId, documentId])
+  @@index([userId, workspaceId, createdAt])
+}
+
+model RecentDocument {
+  userId       String   @db.Uuid
+  documentId   String   @db.Uuid
+  workspaceId  String   @db.Uuid
+  lastViewedAt DateTime @default(now()) @db.Timestamptz(3)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document     Document @relation(fields: [documentId, workspaceId], references: [id, workspaceId], onDelete: Restrict)
+
+  @@id([userId, documentId])
+  @@index([userId, workspaceId, lastViewedAt])
+}
+
+model User {
+  id              String            @id @default(uuid()) @db.Uuid
+  email           String            @unique @db.VarChar(320)
+  name            String?           @db.VarChar(120)
+  passwordHash    String            @db.VarChar(255)
+  createdAt       DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime          @updatedAt @db.Timestamptz(3)
+  deletedAt       DateTime?         @db.Timestamptz(3)
+  memberships     WorkspaceMember[]
+  refreshSessions RefreshSession[]
+  favorites       Favorite[]
+  recentDocuments RecentDocument[]
+
+  @@index([deletedAt])
+}
+
+model Workspace {
+  id        String            @id @default(uuid()) @db.Uuid
+  name      String            @db.VarChar(100)
+  slug      String            @unique @db.VarChar(80)
+  createdAt DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime          @updatedAt @db.Timestamptz(3)
+  deletedAt DateTime?         @db.Timestamptz(3)
+  members   WorkspaceMember[]
+  categories Category[]
+  documents  Document[]
+
+  @@index([deletedAt])
+}
+
+model WorkspaceMember {
+  id          String        @id @default(uuid()) @db.Uuid
+  workspaceId String        @db.Uuid
+  userId      String        @db.Uuid
+  role        WorkspaceRole @default(READER)
+  createdAt   DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime      @updatedAt @db.Timestamptz(3)
+  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([userId, createdAt])
+  @@index([workspaceId, role])
+}
+
+model RefreshSession {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  familyId  String    @db.Uuid
+  tokenHash String    @unique @db.Char(64)
+  expiresAt DateTime  @db.Timestamptz(3)
+  revokedAt DateTime? @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@index([familyId, revokedAt])
+}

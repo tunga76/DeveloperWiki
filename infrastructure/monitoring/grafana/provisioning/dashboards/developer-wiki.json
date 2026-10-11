@@ -1,0 +1,25 @@
+{
+  "title": "Developer Wiki API",
+  "uid": "developer-wiki-api",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "API status",
+      "type": "stat",
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+      "targets": [{ "expr": "up{job=\"developer-wiki-api\"}", "refId": "A" }]
+    },
+    {
+      "id": 2,
+      "title": "Scrape targets",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 6, "y": 0 },
+      "targets": [{ "expr": "up", "legendFormat": "{{job}}", "refId": "A" }]
+    }
+  ],
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser"
+}

@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: Developer Wiki
+    orgId: 1
+    folder: Developer Wiki
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: /etc/grafana/provisioning/dashboards
