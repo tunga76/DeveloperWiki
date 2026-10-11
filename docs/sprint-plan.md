@@ -121,6 +121,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 9 (2026-10-11):** GitHub Actions run annotations, setup-node cache init sırasında `pnpm` executable'ının bulunamadığını ve Prometheus config job'unda container entrypoint'inin `promtool` olmadığını gösterdi. Workflow pnpm çağrılarını `corepack pnpm` biçimine aldı, setup-node pnpm cache probe'unu kaldırdı ve promtool'u açık entrypoint olarak çalıştırıyor. İki Prometheus config/rule kontrolü yerelde geçti; düzeltmeler push sonrası Actions'ta yeniden doğrulanmalı.
 
+**Release readiness devam işi 10 (2026-10-11):** Son Actions run'ında Corepack ile pnpm install adımı Linux runner'da başarısız oldu; pnpm 10.9.0 resmi action ile kurulacak şekilde değiştirildi. Checkout/setup-node action'ları güncel Node 24 destekli release commit SHA'larına yükseltildi. API runtime imajı pnpm production deploy ağacını kullanıyor; migration CLI production bağımlılığına alındı ve Prisma'nın taramada kalan transitive paketleri patched sürümlere override edildi. Node runtime'ında kullanılmayan global npm/npx, API ve web runtime imajlarından kaldırıldı. Lokal API testleri (21/21), workspace typecheck/build, E2E typecheck ve browser senaryoları (4/4) geçti; API ve web production image taramalarında CRITICAL/HIGH bulgu kalmadı. GitHub Actions'ta yeniden doğrulama push sonrası bekliyor.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar

@@ -4,3 +4,11 @@ packages:
 onlyBuiltDependencies:
   - "@prisma/engines"
   - "prisma"
+overrides:
+  brace-expansion: ^2.1.6
+  deepmerge-ts: ^8.0.0
+  ip-address: ^10.3.1
+  mysql2: ^3.22.0
+  pacote: ^21.5.1
+  picomatch: ^4.0.4
+  sigstore: ^4.1.1
