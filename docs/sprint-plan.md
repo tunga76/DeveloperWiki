@@ -119,6 +119,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 8 (2026-10-11):** CI'daki checkout, setup-node ve Trivy action'ları resmi tag release commit SHA'larına pinlendi. Güncel workflow'da hareketli action tag'i kalmadı.
 
+**Release readiness devam işi 9 (2026-10-11):** GitHub Actions run annotations, setup-node cache init sırasında `pnpm` executable'ının bulunamadığını ve Prometheus config job'unda container entrypoint'inin `promtool` olmadığını gösterdi. Workflow pnpm çağrılarını `corepack pnpm` biçimine aldı, setup-node pnpm cache probe'unu kaldırdı ve promtool'u açık entrypoint olarak çalıştırıyor. İki Prometheus config/rule kontrolü yerelde geçti; düzeltmeler push sonrası Actions'ta yeniden doğrulanmalı.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar
