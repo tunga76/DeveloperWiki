@@ -1,0 +1,13 @@
+route:
+  receiver: team-webhook
+  group_by: [alertname, job, severity]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: team-webhook
+    webhook_configs:
+      # Replace this reserved example endpoint before enabling the overlay.
+      - url: https://alerts.example.invalid/replace-with-approved-webhook
+        send_resolved: true

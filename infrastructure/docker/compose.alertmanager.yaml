@@ -1,0 +1,25 @@
+# Optional alert-delivery layer. Provide a tested Alertmanager configuration
+# with an approved receiver before enabling this overlay.
+services:
+  alertmanager:
+    image: ${ALERTMANAGER_IMAGE:?Set ALERTMANAGER_IMAGE to a digest-pinned image}
+    command: ["--config.file=/etc/alertmanager/alertmanager.yml"]
+    volumes:
+      - ${ALERTMANAGER_CONFIG_FILE:?Set ALERTMANAGER_CONFIG_FILE}:/etc/alertmanager/alertmanager.yml:ro
+    expose:
+      - "9093"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+
+  prometheus:
+    volumes: !override
+      - ../monitoring/prometheus.alertmanager.yml:/etc/prometheus/prometheus.yml:ro
+      - ../monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
+    depends_on:
+      alertmanager:
+        condition: service_started

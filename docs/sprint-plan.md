@@ -109,6 +109,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 3 (2026-10-11):** Prometheus API-down, yüksek 5xx oranı ve yüksek ortalama latency eşikleri; Grafana 5xx/latency panelleri ve CI `promtool` config/rule doğrulaması eklendi. Notification routing ve on-call ataması provider/operatör bilgisi gerektirdiği için açık bırakıldı. Bkz. `docs/operations/monitoring.md`.
 
+**Release readiness devam işi 4 (2026-10-11):** Production Grafana/Prometheus erişimi için loopback-only Compose overlay ve SSH tunnel yönergesi, Alertmanager için provider-neutral receiver config örneği ve opt-in Compose katmanı eklendi. CI ana ve Alertmanager-enabled Compose konfigürasyonlarını kontrol eder. Gerçek receiver URL'si, Alertmanager image digest'i, SSH erişimi ve on-call sahibi operatör girdisi bekliyor.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar

@@ -16,6 +16,8 @@ Bu katman Linux host üzerinde Docker Compose v2.24.4 veya sonrası içindir; ba
 
 `.env.production.example` değişken adlarını ve secret dosyası yol biçimini gösterir. Image digest'leri sıfırlarla doldurulmuş örnek değerlerdir ve gerçek digest'lerle değiştirilmelidir; validator tüm sekiz image digest'ini kontrol eder. Kopyasını repo dışındaki deploy env dosyasında gerçek değerlerle değiştirin.
 
+Operations UI veya Alertmanager overlay'lerini etkinleştirdiyseniz ilgili Compose katmanlarını deployment komutlarına da ekleyin. UI için `compose.ops-access.yaml`, webhook teslimatı yapılandırıldıktan sonra Alertmanager için `compose.alertmanager.yaml` eklenir.
+
 ## Config doğrulama ve açılış
 
 ```sh

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
 
 permissions:
@@ -83,6 +83,14 @@ jobs:
           GRAFANA_ADMIN_PASSWORD_FILE=$RUNNER_TEMP/developer-wiki-secrets/grafana
           EOF
           bash scripts/validate-production-config.sh
+          cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
+          cat >> "$DEPLOY_ENV_FILE" <<EOF
+          ENABLE_ALERTMANAGER=true
+          ENABLE_OPS_UI=true
+          ALERTMANAGER_IMAGE=alertmanager@${image_digest}
+          ALERTMANAGER_CONFIG_FILE=$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml
+          EOF
+          bash scripts/validate-production-config.sh
 
   monitoring-config:
     runs-on: ubuntu-latest
@@ -90,7 +98,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate Prometheus config and alert rules
         run: |
-          docker run --rm \
-            -v "$PWD/infrastructure/monitoring:/etc/prometheus:ro" \
-            prom/prometheus:v3.7.3 \
-            promtool check config /etc/prometheus/prometheus.yml
+          for config in prometheus.yml prometheus.alertmanager.yml; do
+            docker run --rm \
+              -v "$PWD/infrastructure/monitoring:/etc/prometheus:ro" \
+              prom/prometheus:v3.7.3 \
+              promtool check config "/etc/prometheus/$config"
+          done
