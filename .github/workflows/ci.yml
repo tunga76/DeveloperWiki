@@ -49,3 +49,37 @@ jobs:
           severity: CRITICAL,HIGH
           exit-code: "1"
           ignore-unfixed: true
+
+  production-compose-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create temporary secret files
+        run: |
+          mkdir -p "$RUNNER_TEMP/developer-wiki-secrets"
+          for secret in database-url jwt postgres minio grafana; do
+            printf 'validation-only' > "$RUNNER_TEMP/developer-wiki-secrets/$secret"
+          done
+      - name: Validate production Compose settings
+        env:
+          DEPLOY_ENV_FILE: ${{ runner.temp }}/developer-wiki-deploy.env
+        run: |
+          image_digest="sha256:$(printf '0%.0s' {1..64})"
+          cat > "$DEPLOY_ENV_FILE" <<EOF
+          SITE_ADDRESS=wiki.example.test
+          WEB_IMAGE=example/web@${image_digest}
+          API_IMAGE=example/api@${image_digest}
+          CADDY_IMAGE=caddy@${image_digest}
+          POSTGRES_IMAGE=postgres@${image_digest}
+          REDIS_IMAGE=redis@${image_digest}
+          MINIO_IMAGE=minio@${image_digest}
+          PROMETHEUS_IMAGE=prometheus@${image_digest}
+          GRAFANA_IMAGE=grafana@${image_digest}
+          MINIO_ROOT_USER=wiki-root
+          DATABASE_URL_SECRET_FILE=$RUNNER_TEMP/developer-wiki-secrets/database-url
+          JWT_SECRET_FILE=$RUNNER_TEMP/developer-wiki-secrets/jwt
+          POSTGRES_PASSWORD_FILE=$RUNNER_TEMP/developer-wiki-secrets/postgres
+          MINIO_ROOT_PASSWORD_FILE=$RUNNER_TEMP/developer-wiki-secrets/minio
+          GRAFANA_ADMIN_PASSWORD_FILE=$RUNNER_TEMP/developer-wiki-secrets/grafana
+          EOF
+          bash scripts/validate-production-config.sh

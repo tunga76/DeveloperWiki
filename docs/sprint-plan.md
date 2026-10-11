@@ -105,6 +105,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi (2026-10-11):** Digest-pinned image zorlamalı production Compose katmanı, Caddy TLS reverse proxy, production-only secret file injection, public port kapatma ve deployment runbook eklendi. Örnek test secret dosyalarıyla Compose config doğrulandı; tek yayımlanan servis Caddy oldu. Host deploy'u/Let's Encrypt issuance, gerçek secret manager, off-host yedek/restore tatbikatı ve SLA/RPO/RTO hâlâ operatör girdisi bekliyor. Bkz. `docs/operations/deployment.md` ve `docs/release-checklist.md`.
 
+**Release readiness devam işi 2 (2026-10-11):** API/Web imajlarına image-level healthcheck, production Compose'u secret fixture'larıyla doğrulayan CI job'u ve staging deploy sonrası TLS/web/API/auth/DB readiness smoke script'i eklendi. Docker API/Web image builds ve API production compile başarılı; API testleri 21/21. Gerçek staging URL'si ve deploy yetkileri olmadığı için public smoke henüz çalıştırılmadı.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar

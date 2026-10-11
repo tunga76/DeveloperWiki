@@ -23,9 +23,10 @@ DEPLOY_ENV_FILE=/etc/developer-wiki/deploy.env bash scripts/validate-production-
 docker compose --env-file /etc/developer-wiki/deploy.env -f infrastructure/docker/compose.yaml -f infrastructure/docker/compose.production.yaml pull
 docker compose --env-file /etc/developer-wiki/deploy.env -f infrastructure/docker/compose.yaml -f infrastructure/docker/compose.production.yaml up -d
 docker compose --env-file /etc/developer-wiki/deploy.env -f infrastructure/docker/compose.yaml -f infrastructure/docker/compose.production.yaml ps
+SITE_URL=https://wiki.example.com DEPLOY_ENV_FILE=/etc/developer-wiki/deploy.env bash scripts/smoke-deployment.sh
 ```
 
-Web `/` ve API `/health`, `/ready` durumlarını kontrol edin. DB/cache/object store/monitoring servisleri yalnız Compose network'ünde kalır. API konteyneri başlangıçta `prisma migrate deploy` çalıştırır; production migration öncesi DB yedeği alın ve release checklist'teki migration/rollback maddelerini yerine getirin.
+Smoke script TLS üzerinden web'i, API proxy/CSRF ve unauthenticated auth yanıtını, ayrıca Compose network'ünde API `/ready` + DB bağlantısını kontrol eder. DB/cache/object store/monitoring servisleri yalnız Compose network'ünde kalır. API konteyneri başlangıçta `prisma migrate deploy` çalıştırır; production migration öncesi DB yedeği alın ve release checklist'teki migration/rollback maddelerini yerine getirin.
 
 ## Geri alma
 

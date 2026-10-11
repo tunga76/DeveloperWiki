@@ -9,6 +9,7 @@
 - [ ] MinIO registry kaynağı/provenance kararı onaylanmıştır.
 - [ ] Migration, staging verisinin yedeğiyle denenmiş; geri dönüş/ileri düzeltme prosedürü kayıtlıdır.
 - [ ] `infrastructure/docker/compose.production.yaml` ile production config doğrulandı; image değerleri digest pinli ve approved registry'den geliyor.
+- [ ] `scripts/smoke-deployment.sh` staging URL'si üzerinde TLS, web/API proxy, auth ve API/DB readiness kontrollerini geçti.
 
 ## Operasyon
 
