@@ -27,6 +27,22 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm build
 
+  browser-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.11.0
+          cache: pnpm
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck:e2e
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Run browser user journeys
+        run: pnpm test:e2e
+
   container-scan:
     runs-on: ubuntu-latest
     steps:

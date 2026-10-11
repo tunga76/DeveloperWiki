@@ -3,6 +3,8 @@
 ## Uygulama ve güvenlik
 
 - [ ] CI lint/typecheck/build/API testleri başarılı; dependency audit ve API/web container scan sonuçları gözden geçirildi.
+- [x] Playwright suite kayıt/workspace, login/profil/tema/çıkış, kategori/doküman editörü/sürüm ve arama/favori ana akışlarını kapsıyor; CI browser job'u eklendi.
+- [ ] Son `master` commit'i için GitHub browser E2E job'u yeşil.
 - [ ] Production `JWT_SECRET` secret manager'dan gelir ve en az 32 rastgele karakterdir; yerel Compose varsayılanları kullanılmaz.
 - [ ] HTTPS reverse proxy, gerçek `WEB_ORIGIN`, `COOKIE_SECURE=true`; host firewall yalnız gerekli TLS girişini açar.
 - [ ] PostgreSQL, Redis, MinIO ve Grafana dış ağa açılmaz; Grafana kimlik doğrulaması ve erişim kısıtı vardır.
@@ -26,4 +28,4 @@
 
 ## Mevcut release engelleri
 
-Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatılması ve API/DB/MinIO/Grafana secret dosyalarını bağlama desteği sağlar. Şifreli PostgreSQL backup script'i S3 uyumlu off-host hedefe yükleme ve checksum sidecar doğrulaması sağlar; gerçek bucket/kimlik bilgisi/lifecycle ile çalıştırılmadı. Bu repository'de gerçek staging/production ortamı veya secret manager bağlantısı yok. Restore tatbikatı, SLA/RPO/RTO, TLS host adı, operasyon sahibi, Alertmanager receiver ve MinIO image tedarik zinciri onayı operatör girdisi bekliyor. Bu maddeler tamamlanmadan checklist production-ready olarak işaretlenemez.
+Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatılması ve API/DB/MinIO/Grafana secret dosyalarını bağlama desteği sağlar. Şifreli PostgreSQL backup script'i S3 uyumlu off-host hedefe yükleme ve checksum sidecar doğrulaması sağlar; gerçek bucket/kimlik bilgisi/lifecycle ile çalıştırılmadı. Playwright E2E suite ve CI job'u eklendi, yerelde dört senaryo geçti; GitHub Actions sonucu henüz doğrulanmadı. Bu repository'de gerçek staging/production ortamı veya secret manager bağlantısı yok. Restore tatbikatı, SLA/RPO/RTO, TLS host adı, operasyon sahibi, Alertmanager receiver ve MinIO image tedarik zinciri onayı operatör girdisi bekliyor. Bu maddeler tamamlanmadan checklist production-ready olarak işaretlenemez.
