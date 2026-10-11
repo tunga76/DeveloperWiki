@@ -60,17 +60,37 @@ jobs:
           version: 0.75.0
           severity: CRITICAL,HIGH
           timeout: 10m
+          format: json
+          output: trivy-api.json
           exit-code: "1"
           ignore-unfixed: true
       - name: Scan web image
+        if: always()
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: developer-wiki-web:ci
           version: 0.75.0
           severity: CRITICAL,HIGH
           timeout: 10m
+          format: json
+          output: trivy-web.json
           exit-code: "1"
           ignore-unfixed: true
+      - name: Summarize image scan findings
+        if: always()
+        run: |
+          for report in trivy-api.json trivy-web.json; do
+            if [[ ! -s "$report" ]]; then
+              echo "::error title=Trivy diagnostics::$report was not produced"
+              continue
+            fi
+            findings="$(jq -r '[.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL" or .Severity == "HIGH") | "\(.Severity) \(.PkgName)@\(.InstalledVersion) \(.VulnerabilityID)"] | join("; ")' "$report")"
+            if [[ -n "$findings" ]]; then
+              echo "::error title=Trivy findings::$report: $findings"
+            else
+              echo "$report: no fixed CRITICAL/HIGH vulnerabilities"
+            fi
+          done
 
   production-compose-config:
     runs-on: ubuntu-latest

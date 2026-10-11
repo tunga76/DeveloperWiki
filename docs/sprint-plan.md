@@ -125,6 +125,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 11 (2026-10-11):** `69e8242` run'ında quality, Compose, monitoring ve browser E2E başarılı; Trivy API adımı genel exit-code hatası verdi ve annotation paket ayrıntısı içermedi. Son imaj Trivy 0.65.0, 0.69.3 ve 0.75.0 ile yerelde tarandı; CRITICAL/HIGH bulgu yok. CI Trivy action'ı güncel `v0.36.0` commit SHA'sına yükseltildi, scanner `0.75.0` ve 10 dakikalık timeout sabitlendi. Bu tarama sonucu yeni Actions run'ında doğrulanacak.
 
+**Release readiness devam işi 12 (2026-10-11):** `51b9147` run'ında aynı API Trivy exit-code hatası tekrarlandı; diğer dört CI job'u geçti. CI action'ı için JSON raporu ve her iki imajı da özetleyen annotation adımı eklendi; sonraki run bulgu paketlerini veya rapor üretilmemesini gösterecek. Ayrıca disposable PostgreSQL 17 + MinIO ortamında gerçek script ile age şifreli dump, S3-compatible upload, checksum doğrulaması ve ayrı DB restore'u tamamlandı; 9 saniyelik süre tek satırlık fixture ölçümüdür ve RTO sayılmaz. Test kimlikleri, konteynerler ve geçici volume'lar tatbikat sonrası temizlendi.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar
