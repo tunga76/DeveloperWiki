@@ -16,7 +16,7 @@
 - [ ] Operasyon sahibi, staging/production adresleri, SLA, RPO ve RTO kararlaştırıldı.
 - [ ] Şifreli off-host PostgreSQL ve nesne yedekleri çalışır; saklama ve erişim politikası belirlenmiştir.
 - [ ] `docs/operations/backup-restore.md` izole ortamda tatbik edildi; süre ve sonuç kaydedildi.
-- [ ] Grafana/Prometheus panoları ve health/readiness uyarıları erişilebilir; nöbet/olay sahibi atanmıştır.
+- [ ] Grafana/Prometheus panoları erişilebilir; Prometheus alert rules ve notification routing doğrulandı; nöbet/olay sahibi atanmıştır.
 - [ ] Staging deploy, auth/content smoke ve performans ölçümü tamamlanmıştır.
 - [ ] Release sürümü, migration, rollback yaklaşımı ve incident iletişim planı onaylandı.
 

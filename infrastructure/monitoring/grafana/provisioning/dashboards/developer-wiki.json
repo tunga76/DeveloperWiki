@@ -18,6 +18,34 @@
       "type": "timeseries",
       "gridPos": { "h": 8, "w": 12, "x": 6, "y": 0 },
       "targets": [{ "expr": "up", "legendFormat": "{{job}}", "refId": "A" }]
+    },
+    {
+      "id": 3,
+      "title": "API 5xx error rate",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "percent" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "100 * sum(rate(developer_wiki_http_requests_total{job=\"developer-wiki-api\",status_code=~\"5..\"}[5m])) / clamp_min(sum(rate(developer_wiki_http_requests_total{job=\"developer-wiki-api\"}[5m])), 0.001)",
+          "legendFormat": "5xx %",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "API mean request latency",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "sum(rate(developer_wiki_http_request_duration_seconds_sum{job=\"developer-wiki-api\"}[5m])) / clamp_min(sum(rate(developer_wiki_http_request_duration_seconds_count{job=\"developer-wiki-api\"}[5m])), 0.001)",
+          "legendFormat": "mean seconds",
+          "refId": "A"
+        }
+      ]
     }
   ],
   "time": { "from": "now-1h", "to": "now" },

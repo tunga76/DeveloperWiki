@@ -1,0 +1,49 @@
+groups:
+  - name: developer-wiki-api
+    rules:
+      - alert: DeveloperWikiApiUnavailable
+        expr: up{job="developer-wiki-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Developer Wiki API scrape is failing
+          description: Prometheus has been unable to scrape the API for two minutes.
+
+      - alert: DeveloperWikiHighServerErrorRate
+        expr: |
+          (
+            sum(increase(developer_wiki_http_requests_total{job="developer-wiki-api",status_code=~"5.."}[10m])) >= 5
+          )
+          and
+          (
+            sum(increase(developer_wiki_http_requests_total{job="developer-wiki-api"}[10m])) > 0
+          )
+          and
+          (
+            sum(increase(developer_wiki_http_requests_total{job="developer-wiki-api",status_code=~"5.."}[10m]))
+            / sum(increase(developer_wiki_http_requests_total{job="developer-wiki-api"}[10m])) > 0.05
+          )
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Developer Wiki API server error rate is elevated
+          description: At least five 5xx responses and a 5xx share above 5% were observed over ten minutes.
+
+      - alert: DeveloperWikiHighAverageRequestLatency
+        expr: |
+          (
+            sum(rate(developer_wiki_http_request_duration_seconds_count{job="developer-wiki-api"}[5m])) >= 0.1
+          )
+          and
+          (
+            sum(rate(developer_wiki_http_request_duration_seconds_sum{job="developer-wiki-api"}[5m]))
+            / sum(rate(developer_wiki_http_request_duration_seconds_count{job="developer-wiki-api"}[5m])) > 2
+          )
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Developer Wiki API average request latency is above two seconds
+          description: Mean response time exceeded two seconds for ten minutes at sufficient traffic volume.

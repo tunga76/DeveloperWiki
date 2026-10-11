@@ -107,6 +107,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 2 (2026-10-11):** API/Web imajlarına image-level healthcheck, production Compose'u secret fixture'larıyla doğrulayan CI job'u ve staging deploy sonrası TLS/web/API/auth/DB readiness smoke script'i eklendi. Docker API/Web image builds ve API production compile başarılı; API testleri 21/21. Gerçek staging URL'si ve deploy yetkileri olmadığı için public smoke henüz çalıştırılmadı.
 
+**Release readiness devam işi 3 (2026-10-11):** Prometheus API-down, yüksek 5xx oranı ve yüksek ortalama latency eşikleri; Grafana 5xx/latency panelleri ve CI `promtool` config/rule doğrulaması eklendi. Notification routing ve on-call ataması provider/operatör bilgisi gerektirdiği için açık bırakıldı. Bkz. `docs/operations/monitoring.md`.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar
