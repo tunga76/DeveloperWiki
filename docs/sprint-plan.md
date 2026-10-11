@@ -1,6 +1,6 @@
 # Developer Wiki — Epic ve Sprint Planı
 
-**Durum:** Sprint 6 uygulama işleri tamamlandı; production release koşulları açık  
+**Durum:** Sprint 6 uygulama işleri tamamlandı; release readiness iyileştirmeleri sürüyor
 **Sürüm:** 0.1  
 **Tarih:** 11 Ekim 2026
 
@@ -102,6 +102,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 **Kabul:** CI yeşil; 12 ekran ana akışları tamam; production secrets güvenli; restore süreci denenmiş; bilinen riskler kayıtlı.
 
 **Durum (2026-10-11):** Profile ekranı ve güvenli ad güncelleme API'si, workspace hesap menüsü/CSRF çıkış, light/dark tema tercihi, mobil üst gezinme, klavye odağı/skip link/reduced motion, dependency audit ve API/web image scan CI işleri ile backup/restore ve release checklist eklendi. Production kabulü açık: bu repoda staging/secret manager yok; gerçek TLS/prod secrets, off-host yedek ve restore tatbikatı, SLA/RPO/RTO, MinIO image kaynağı onayı ve staging performans smoke ölçümü yapılmadı. Bkz. `docs/release-checklist.md`.
+
+**Release readiness devam işi (2026-10-11):** Digest-pinned image zorlamalı production Compose katmanı, Caddy TLS reverse proxy, production-only secret file injection, public port kapatma ve deployment runbook eklendi. Örnek test secret dosyalarıyla Compose config doğrulandı; tek yayımlanan servis Caddy oldu. Host deploy'u/Let's Encrypt issuance, gerçek secret manager, off-host yedek/restore tatbikatı ve SLA/RPO/RTO hâlâ operatör girdisi bekliyor. Bkz. `docs/operations/deployment.md` ve `docs/release-checklist.md`.
 
 ## Story örnekleri
 

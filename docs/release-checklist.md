@@ -8,6 +8,7 @@
 - [ ] PostgreSQL, Redis, MinIO ve Grafana dış ağa açılmaz; Grafana kimlik doğrulaması ve erişim kısıtı vardır.
 - [ ] MinIO registry kaynağı/provenance kararı onaylanmıştır.
 - [ ] Migration, staging verisinin yedeğiyle denenmiş; geri dönüş/ileri düzeltme prosedürü kayıtlıdır.
+- [ ] `infrastructure/docker/compose.production.yaml` ile production config doğrulandı; image değerleri digest pinli ve approved registry'den geliyor.
 
 ## Operasyon
 
@@ -20,4 +21,4 @@
 
 ## Mevcut release engelleri
 
-Bu repository'de gerçek staging/production ortamı veya secret manager bağlantısı yok. Off-host yedek hedefi, geri yükleme tatbikatı, SLA/RPO/RTO, TLS host adı, operasyon sahibi ve MinIO mirror tedarik zinciri onayı da tanımlı değil. Bu maddeler tamamlanmadan checklist production-ready olarak işaretlenemez.
+Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatılması ve API/DB/MinIO/Grafana secret dosyalarını bağlama desteği sağlar. Bu repository'de gerçek staging/production ortamı veya secret manager bağlantısı yok. Off-host yedek hedefi, geri yükleme tatbikatı, SLA/RPO/RTO, TLS host adı, operasyon sahibi ve MinIO image tedarik zinciri onayı da tanımlı değil. Bu maddeler tamamlanmadan checklist production-ready olarak işaretlenemez.

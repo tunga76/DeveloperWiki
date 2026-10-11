@@ -1,0 +1,109 @@
+# Layer over compose.yaml for a TLS-terminated, single-host deployment.
+# Compose v2.24+ is required for !override.
+services:
+  caddy:
+    image: ${CADDY_IMAGE:?Set CADDY_IMAGE to an approved digest-pinned Caddy image}
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:?Set SITE_ADDRESS to the public DNS name}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+
+  web:
+    build: !reset null
+    image: ${WEB_IMAGE:?Set WEB_IMAGE to a digest-pinned web image}
+    ports: !override []
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+
+  api:
+    build: !reset null
+    image: ${API_IMAGE:?Set API_IMAGE to a digest-pinned API image}
+    ports: !override []
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ""
+      DATABASE_URL_FILE: /run/secrets/database_url
+      JWT_SECRET: ""
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      WEB_ORIGIN: https://${SITE_ADDRESS:?Set SITE_ADDRESS to the public DNS name}
+      COOKIE_SECURE: "true"
+    secrets:
+      - database_url
+      - jwt_secret
+
+  postgres:
+    image: ${POSTGRES_IMAGE:?Set POSTGRES_IMAGE to an approved digest-pinned image}
+    ports: !override []
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ""
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+
+  redis:
+    image: ${REDIS_IMAGE:?Set REDIS_IMAGE to an approved digest-pinned image}
+    ports: !override []
+    restart: unless-stopped
+
+  minio:
+    image: ${MINIO_IMAGE:?Set MINIO_IMAGE to an approved digest-pinned upstream or internal image}
+    ports: !override []
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ""
+      MINIO_ROOT_PASSWORD_FILE: /run/secrets/minio_root_password
+    secrets:
+      - minio_root_password
+
+  prometheus:
+    image: ${PROMETHEUS_IMAGE:?Set PROMETHEUS_IMAGE to an approved digest-pinned image}
+    ports: !override []
+    restart: unless-stopped
+
+  grafana:
+    image: ${GRAFANA_IMAGE:?Set GRAFANA_IMAGE to an approved digest-pinned image}
+    ports: !override []
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ""
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_admin_password
+    secrets:
+      - grafana_admin_password
+
+secrets:
+  database_url:
+    file: ${DATABASE_URL_SECRET_FILE:?Set DATABASE_URL_SECRET_FILE}
+  jwt_secret:
+    file: ${JWT_SECRET_FILE:?Set JWT_SECRET_FILE}
+  postgres_password:
+    file: ${POSTGRES_PASSWORD_FILE:?Set POSTGRES_PASSWORD_FILE}
+  minio_root_password:
+    file: ${MINIO_ROOT_PASSWORD_FILE:?Set MINIO_ROOT_PASSWORD_FILE}
+  grafana_admin_password:
+    file: ${GRAFANA_ADMIN_PASSWORD_FILE:?Set GRAFANA_ADMIN_PASSWORD_FILE}
+
+volumes:
+  caddy_data:
+  caddy_config:

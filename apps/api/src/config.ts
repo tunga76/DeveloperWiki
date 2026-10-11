@@ -1,8 +1,14 @@
 import { z } from "zod";
 import { config as loadEnv } from "dotenv";
+import { readFileSync } from "node:fs";
 
 loadEnv();
 loadEnv({ path: "../../.env" });
+
+for (const name of ["DATABASE_URL", "JWT_SECRET"] as const) {
+  const secretFile = process.env[`${name}_FILE`];
+  if (secretFile) process.env[name] = readFileSync(secretFile, "utf8").trim();
+}
 
 const envSchema = z.object({
   NODE_ENV: z
