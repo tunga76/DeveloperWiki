@@ -21,7 +21,8 @@
 - [ ] `docs/operations/backup-restore.md` izole ortamda tatbik edildi; süre ve sonuç kaydedildi.
 - [ ] Grafana/Prometheus panoları erişilebilir; Prometheus alert rules ve notification routing doğrulandı; nöbet/olay sahibi atanmıştır.
 - [ ] Staging deploy, auth/content smoke ve performans ölçümü tamamlanmıştır.
-- [ ] Release sürümü, migration, rollback yaklaşımı ve incident iletişim planı onaylandı.
+- [x] Incident müdahalesi, rollback/restore ve durum güncellemesi için başlangıç şablonu `docs/operations/incident-response.md` içine eklendi.
+- [ ] Release sürümü, migration/rollback yaklaşımı, incident owner/channel/update cadence ve iletişim planı operatörce doldurulup onaylandı.
 
 ## Mevcut release engelleri
 

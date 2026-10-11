@@ -113,6 +113,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 5 (2026-10-11):** PostgreSQL custom dump'ını hostta plaintext dosyaya yazmadan age ile şifreleyip S3 uyumlu off-host hedefe yükleyen, SHA-256 sidecar üreten ve iki nesnenin varlığını doğrulayan `scripts/backup-postgres-offsite.sh` eklendi. Linux systemd service/timer örnekleri ve backup/restore runbook'u şifreli akış, key ayrımı ve zamanlama kurulumunu anlatıyor. Git Bash `bash -n` ve sahte Docker/age/AWS komutlarıyla backup flow kontrolü geçti; Alertmanager ve ops erişim dahil production Compose config kontrolü geçti. Script henüz gerçek bucket/identity ile çalıştırılmadı; lifecycle, IAM, timer, MinIO nesne yedeği ve restore tatbikatı operatör ortamı bekliyor.
 
+**Release readiness devam işi 6 (2026-10-11):** Incident response runbook'u, iletişim durumu şablonu, deploy rollback, veri olayı ve restore adımları eklendi. Release checklist şablonun varlığını tamamlanmış, owner/channel/update cadence ve incident plan onayını operatör girdisi olarak ayırıyor.
+
 ## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar
