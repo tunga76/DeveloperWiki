@@ -131,7 +131,7 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 14 (2026-10-11):** `ad66d71` scan diagnostic adımı her iki Trivy raporunun da üretilmediğini gösterdi; Trivy setup input'unda release sürümü `v` önekiyle bekleniyor. Workflow `v0.75.0` biçimine düzeltildi. Sonraki Actions run'ında container-scan ve eklenen clean-database migration adımı doğrulanacak.
 
-**Release readiness devam işi 15 (2026-10-12):** Release checklist ve CI workflow yayınlanan `master` ile karşılaştırıldı. `6e619cf` commit'ine ait Actions run `38168504143` başarıyla tamamlandı: quality (fresh PostgreSQL migration, dependency audit, API tests, lint, typecheck, build), browser E2E, API/web Trivy scan, production Compose ve monitoring config job'larının tümü yeşil. Yerel doküman değişikliği GitHub connector ile master'a yayınlanıyor. Staging, secret manager, gerçek bucket/restore, host/TLS, tedarik ve operasyon sahibi girdileri operatör ortamı bekliyor.
+**Release readiness devam işi 15 (2026-10-12):** Release checklist ve CI workflow yayınlanan `master` ile karşılaştırıldı. `6e619cf` commit'ine ait Actions run `38168504143` başarıyla tamamlandı: quality (fresh PostgreSQL migration, dependency audit, API tests, lint, typecheck, build), browser E2E, API/web Trivy scan, production Compose ve monitoring config job'larının tümü yeşil. Güncel checklistte CI ve production Compose yapılandırma doğrulamaları tamamlandı; gerçek production registry digest'leri ve MinIO provenance kararı ayrı açık bırakıldı. Staging, secret manager, gerçek bucket/restore, host/TLS ve operasyon sahibi girdileri operatör ortamı bekliyor.
 
 ## Story örnekleri
 
