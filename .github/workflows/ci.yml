@@ -131,6 +131,10 @@ jobs:
           export PATH="$RUNNER_TEMP/alertmanager-0.34.1.linux-amd64:$PATH"
           amtool check-config "$PWD/infrastructure/monitoring/alertmanager.yml.example" --enable-feature=utf8-strict-mode
           bash -n scripts/backup-postgres-offsite.sh
+          grep -qx 'CapabilityBoundingSet=' infrastructure/systemd/developer-wiki-backup.service
+          grep -qx 'AmbientCapabilities=' infrastructure/systemd/developer-wiki-backup.service
+          grep -qx 'RestrictSUIDSGID=true' infrastructure/systemd/developer-wiki-backup.service
+          grep -qx 'RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6' infrastructure/systemd/developer-wiki-backup.service
           touch "$RUNNER_TEMP/backup-validation.env"
           for backup_uri in "s3:///missing-bucket" "https://example.invalid/backups" "s3://bucket/path with-space"; do
             if DEPLOY_ENV_FILE="$RUNNER_TEMP/backup-validation.env" BACKUP_S3_URI="$backup_uri" AGE_RECIPIENT=age1fixture bash scripts/backup-postgres-offsite.sh; then
