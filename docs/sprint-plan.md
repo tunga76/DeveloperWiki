@@ -196,3 +196,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 22 (2026-10-12):** `scripts/validate-production-config.sh` production secret dosyalarının mevcut, okunabilir, normal dosya ve boş olmadığını doğruluyor; `JWT_SECRET_FILE` uzunluğu 32 karakter altındaysa içerik göstermeden hata veriyor. Production Compose CI kısa JWT secret'ını reddetme ve geçerli fixture ile devam etme senaryolarını çalıştıracak şekilde güncellendi. Gerçek secret manager ve gerçek credential doğrulaması operatör ortamına bağlıdır; Actions push run durumu bu bağlantıda listelenemediğinden CI sonucu ayrıca doğrulanmalı.
+
+
+**Release readiness devam işi 23 (2026-10-12):** `scripts/smoke-deployment.sh` deploy env dosyasındaki `ENABLE_OPS_UI` ve `ENABLE_ALERTMANAGER` seçimlerini okuyup aynı production Compose overlay'leriyle API readiness kontrolü yapıyor. CI smoke script'ini sahte curl/docker komutlarıyla, dış ağa bağlanmadan hem overlay'siz hem iki overlay birlikte senaryosunda doğrulayacak şekilde genişletildi. Bu otomatik senaryo canlı staging TLS/auth/readiness sonucunun yerine geçmez; Actions push sonucu da connector'dan görünür değil.
