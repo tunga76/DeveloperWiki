@@ -125,6 +125,11 @@ jobs:
         env:
           DEPLOY_ENV_FILE: ${{ runner.temp }}/developer-wiki-deploy.env
         run: |
+          curl -fsSLo "$RUNNER_TEMP/alertmanager.tar.gz" "https://github.com/prometheus/alertmanager/releases/download/v0.34.1/alertmanager-0.34.1.linux-amd64.tar.gz"
+          printf '265b9d1e55ef0d5306a436018af6d2b686c2ce051f03d968f7464ecb1372a7e8  %s\\n' "$RUNNER_TEMP/alertmanager.tar.gz" | sha256sum --check -
+          tar -xzf "$RUNNER_TEMP/alertmanager.tar.gz" -C "$RUNNER_TEMP"
+          export PATH="$RUNNER_TEMP/alertmanager-0.34.1.linux-amd64:$PATH"
+          amtool check-config "$PWD/infrastructure/monitoring/alertmanager.yml.example" --enable-feature=utf8-strict-mode
           bash -n scripts/backup-postgres-offsite.sh
           touch "$RUNNER_TEMP/backup-validation.env"
           for backup_uri in "s3:///missing-bucket" "https://example.invalid/backups" "s3://bucket/path with-space"; do
@@ -219,13 +224,30 @@ jobs:
           printf 'WEB_IMAGE=registry.example/private/DO-NOT-PRINT@bad-digest\n' >> "$RUNNER_TEMP/invalid-image.env"
           assert_config_rejects "$RUNNER_TEMP/invalid-image.env" WEB_IMAGE DO-NOT-PRINT
           bash scripts/validate-production-config.sh
-          cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
+          sed 's#alerts.example.invalid/replace-with-approved-webhook#alerts.example.test/webhook#' infrastructure/monitoring/alertmanager.yml.example > "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
           cat >> "$DEPLOY_ENV_FILE" <<EOF
           ENABLE_ALERTMANAGER=true
           ENABLE_OPS_UI=true
           ALERTMANAGER_IMAGE=alertmanager@${image_digest}
           ALERTMANAGER_CONFIG_FILE=$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml
           EOF
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/missing-alertmanager.env"
+          printf 'ALERTMANAGER_CONFIG_FILE=%s\\n' "$RUNNER_TEMP/does-not-exist" >> "$RUNNER_TEMP/missing-alertmanager.env"
+          assert_config_rejects "$RUNNER_TEMP/missing-alertmanager.env" ALERTMANAGER_CONFIG_FILE
+          touch "$RUNNER_TEMP/empty-alertmanager.yml"
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/empty-alertmanager.env"
+          printf 'ALERTMANAGER_CONFIG_FILE=%s\\n' "$RUNNER_TEMP/empty-alertmanager.yml" >> "$RUNNER_TEMP/empty-alertmanager.env"
+          assert_config_rejects "$RUNNER_TEMP/empty-alertmanager.env" ALERTMANAGER_CONFIG_FILE
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/directory-alertmanager.env"
+          printf 'ALERTMANAGER_CONFIG_FILE=%s\\n' "$RUNNER_TEMP/secret-directory" >> "$RUNNER_TEMP/directory-alertmanager.env"
+          assert_config_rejects "$RUNNER_TEMP/directory-alertmanager.env" ALERTMANAGER_CONFIG_FILE
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/reserved-alertmanager.env"
+          printf 'ALERTMANAGER_CONFIG_FILE=%s\\n' "$PWD/infrastructure/monitoring/alertmanager.yml.example" >> "$RUNNER_TEMP/reserved-alertmanager.env"
+          assert_config_rejects "$RUNNER_TEMP/reserved-alertmanager.env" ALERTMANAGER_CONFIG_FILE
+          printf 'route: [\\n' > "$RUNNER_TEMP/invalid-alertmanager.yml"
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/invalid-alertmanager.env"
+          printf 'ALERTMANAGER_CONFIG_FILE=%s\\n' "$RUNNER_TEMP/invalid-alertmanager.yml" >> "$RUNNER_TEMP/invalid-alertmanager.env"
+          assert_config_rejects "$RUNNER_TEMP/invalid-alertmanager.env" ALERTMANAGER_CONFIG_FILE
           bash scripts/validate-production-config.sh
           smoke_bin="$RUNNER_TEMP/smoke-bin"
           mkdir -p "$smoke_bin"
