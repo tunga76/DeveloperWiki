@@ -10,8 +10,8 @@ if [[ ! -r "$DEPLOY_ENV_FILE" ]]; then
   echo "Cannot read deployment env file: $DEPLOY_ENV_FILE" >&2
   exit 1
 fi
-if [[ "$BACKUP_S3_URI" != s3://* || "$BACKUP_S3_URI" == s3:// ]]; then
-  echo "BACKUP_S3_URI must be an s3://bucket/prefix destination" >&2
+if [[ ! "$BACKUP_S3_URI" =~ ^s3://[^/[:space:]]+(/[^[:space:]]*)?$ ]]; then
+  echo "BACKUP_S3_URI must be an s3://bucket/prefix destination without whitespace" >&2
   exit 1
 fi
 for command_name in docker age aws sha256sum; do
