@@ -134,6 +134,7 @@ jobs:
           backup_unit="infrastructure/systemd/developer-wiki-backup.service"
           grep -qx 'User=developer-wiki-backup' "$backup_unit"
           grep -qx 'Group=docker' "$backup_unit"
+          grep -qx 'ExecStart=/usr/bin/bash /opt/developer-wiki/scripts/backup-postgres-offsite.sh' "$backup_unit"
           grep -qx 'CapabilityBoundingSet=' "$backup_unit"
           grep -qx 'AmbientCapabilities=' infrastructure/systemd/developer-wiki-backup.service
           grep -qx 'RestrictSUIDSGID=true' infrastructure/systemd/developer-wiki-backup.service
@@ -141,7 +142,7 @@ jobs:
           touch "$RUNNER_TEMP/backup-validation.env"
           sed -e "s|^WorkingDirectory=.*|WorkingDirectory=$GITHUB_WORKSPACE|" \
             -e "s|^EnvironmentFile=.*|EnvironmentFile=$RUNNER_TEMP/backup-validation.env|" \
-            -e "s|^ExecStart=.*|ExecStart=$GITHUB_WORKSPACE/scripts/backup-postgres-offsite.sh|" \
+            -e "s|^ExecStart=.*|ExecStart=/usr/bin/bash $GITHUB_WORKSPACE/scripts/backup-postgres-offsite.sh|" \
             -e '/^User=/d' -e '/^Group=/d' "$backup_unit" > "$RUNNER_TEMP/developer-wiki-backup.service"
           systemd-analyze verify "$RUNNER_TEMP/developer-wiki-backup.service"
           touch "$RUNNER_TEMP/backup-validation.env"
