@@ -60,3 +60,5 @@ Gerçek staging/production ortamı veya secret manager bağlantısı bu reposito
 - Monitoring CI Grafana dashboard JSON yapısını ve datasource/provider konfigürasyon işaretlerini kontrol eder. Gerçek Grafana erişimi ve Alertmanager receiver teslimi staging üzerinde doğrulanacak.
 
 - Son `master` güncellemelerinin push-triggered Actions run sonucu bu GitHub bağlantısından görüntülenemedi; yeni systemd/Grafana CI adımları yeşil run ile henüz teyit edilmiş sayılmaz.
+
+- Backup timer alanları CI'da kontrol edilir ve `OnCalendar` systemd takvim parser'ından geçirilir. 02:15 ve 30 dakika gecikme yalnız örnektir; onaylı RPO/bakım penceresine göre hostta uyarlanıp doğrulanmalı.
