@@ -50,3 +50,5 @@ Production kurulumu için operatör girdileri:
 - İşletim kararları: servis sahibi ve nöbet iletişim kanalı, incident güncelleme ritmi, release sürümü, migration rollback yöntemi, onaylı SLA/RPO/RTO.
 
 Gerçek staging/production ortamı veya secret manager bağlantısı bu repository'de bulunmuyor. Hosting, secrets, gerçek off-host restore ve işletim kararları onaylanıp doğrulanmadan checklist production-ready olarak işaretlenemez.
+
+- Backup systemd örneği servis process capabilities'lerini ve socket ailelerini sınırlar; CI statik policy invariant'larını denetler. Hostta unit çalıştırma ve Docker daemon root-equivalent erişiminin rootless/managed agent ile kaldırılması gerçek deployment ortamında doğrulanacak.
