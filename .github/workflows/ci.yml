@@ -173,6 +173,16 @@ jobs:
             echo "Production config accepted a JWT secret shorter than 32 characters" >&2
             exit 1
           fi
+          printf '   too-short   ' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
+          if bash scripts/validate-production-config.sh; then
+            echo "Production config accepted a short JWT secret padded with whitespace" >&2
+            exit 1
+          fi
+          printf 'replace-this-is-a-placeholder-with-enough-length-0000' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
+          if bash scripts/validate-production-config.sh; then
+            echo "Production config accepted a placeholder JWT secret" >&2
+            exit 1
+          fi
           printf 'ci-validation-jwt-secret-at-least-32-chars' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
           bash scripts/validate-production-config.sh
           cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
