@@ -66,3 +66,5 @@ Gerçek staging/production ortamı veya secret manager bağlantısı bu reposito
 - Offsite backup S3 nesnelerinin boyutunu yerel encrypted dump/sidecar ile karşılaştırır; CI başarı ve mismatch senaryolarını fake CLI'larla doğrular. Gerçek provider üzerinde checksum/restore tatbikatı ayrıca gereklidir.
 
 - Production port policy rendered Compose üzerinde Caddy için published host port/protocol eşleşmesini 80/tcp, 443/tcp, 443/udp ile sınırlar; başka servislerin host portları loopback olmalıdır. CI alternatif public Caddy portu negatif fixture'ını da reddetmeli.
+
+- Docker Compose 5.3.1 ile production ve operations overlay config render'ları yerel doğrulamadan geçti: Caddy yalnız 80/tcp, 443/tcp, 443/udp; Grafana/Prometheus operations portları loopback'te. Bu, yeni JQ policy CI sonucunu veya gerçek host firewall'ını doğrulamaz.
