@@ -34,7 +34,7 @@ Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatıl
 
 Son doğrulanabilir durum (2026-10-12):
 
-- `.env.production.example` içindeki tüm image örnekleri SHA-256 digest biçiminde; production config CI bu invariant'ı denetliyor.
+- `.env.production.example` içindeki tüm image örnekleri SHA-256 digest biçiminde; production config CI job'u bu invariant'ı denetleyecek şekilde yapılandırıldı.
 - `.github/workflows/ci.yml` ve bu checklist çalışma ağacıyla yayın clone'unda aynı içerikte. Workflow; fresh PostgreSQL migration, lint/typecheck/build/API test/audit, browser E2E, Trivy API/web image scan, production Compose validation ve Prometheus config/rule validation job'larını içeriyor.
 - Önceki yerel doğrulamalar: dependency audit temiz; API 21/21; typecheck/build/lint; Playwright 4/4; production API/Web image build ve yerel CRITICAL/HIGH taramaları; production Compose ve Prometheus doğrulamaları; disposable PostgreSQL migration ve izole PostgreSQL/MinIO backup-restore tatbikatı başarılı.
 - `master` `6e619cf` için Actions run `38168504143` 2026-10-11 tarihinde tamamlandı; beş job'un tamamı başarılı. Bu run kalite, E2E, Trivy API/web taraması, Compose yapılandırma ve monitoring doğrulamalarını kapsadı.
