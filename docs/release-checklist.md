@@ -56,3 +56,5 @@ Gerçek staging/production ortamı veya secret manager bağlantısı bu reposito
 - Backup unit CI'da gerçek unit ayarları için statik kontrollerden ve Ubuntu runner üzerinde systemd unit parser doğrulamasından geçecek şekilde yapılandırıldı. Runner doğrulaması production hostta Docker socket ve kullanıcı/grup izinlerinin çalıştığını kanıtlamaz.
 
 - Backup systemd service script'i doğrudan çalıştırmak yerine `/usr/bin/bash` ile çağırır; script executable bit'ine bağlı değildir. CI beklenen komut satırını denetler.
+
+- Monitoring CI Grafana dashboard JSON yapısını ve datasource/provider konfigürasyon işaretlerini kontrol eder. Gerçek Grafana erişimi ve Alertmanager receiver teslimi staging üzerinde doğrulanacak.
