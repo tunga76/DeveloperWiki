@@ -120,6 +120,7 @@ jobs:
           for secret in database-url jwt postgres minio grafana; do
             printf 'validation-only' > "$RUNNER_TEMP/developer-wiki-secrets/$secret"
           done
+          printf 'ci-validation-jwt-secret-at-least-32-chars' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
       - name: Validate production Compose settings
         env:
           DEPLOY_ENV_FILE: ${{ runner.temp }}/developer-wiki-deploy.env
@@ -167,6 +168,12 @@ jobs:
           MINIO_ROOT_PASSWORD_FILE=$RUNNER_TEMP/developer-wiki-secrets/minio
           GRAFANA_ADMIN_PASSWORD_FILE=$RUNNER_TEMP/developer-wiki-secrets/grafana
           EOF
+          printf 'too-short' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
+          if bash scripts/validate-production-config.sh; then
+            echo "Production config accepted a JWT secret shorter than 32 characters" >&2
+            exit 1
+          fi
+          printf 'ci-validation-jwt-secret-at-least-32-chars' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
           bash scripts/validate-production-config.sh
           cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
           cat >> "$DEPLOY_ENV_FILE" <<EOF
