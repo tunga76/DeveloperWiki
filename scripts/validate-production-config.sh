@@ -38,3 +38,14 @@ if [[ "${ENABLE_OPS_UI:-false}" == "true" ]]; then
 fi
 docker compose --env-file "$DEPLOY_ENV_FILE" \
   "${compose_files[@]}" config --quiet
+rendered_config="$(docker compose --env-file "$DEPLOY_ENV_FILE" \
+  "${compose_files[@]}" config --format json)"
+if ! jq -e '
+  [.services | to_entries[] | select(.value.ports) |
+    {service: .key, ports: .value.ports[]}] as $published |
+  ([$published[] | select(.service == "caddy") | .ports.target] | sort) == [80, 443, 443]
+  and all($published[] | select(.service != "caddy"); .ports.host_ip == "127.0.0.1")
+' <<<"$rendered_config" >/dev/null; then
+  echo "Production Compose must publish only Caddy 80/443 publicly; other published ports must bind to 127.0.0.1" >&2
+  exit 1
+fi
