@@ -211,3 +211,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 27 (2026-10-12):** Alertmanager overlay açıldığında config validator dosyanın normal/okunabilir ve boş olmayan config olmasını, reserved `.invalid` endpoint içermemesini ve aynı runtime release'inden `amtool` ile UTF-8 strict config check'ini şart koşuyor. CI amtool 0.34.1 release arşivini resmi SHA-256 checksum ile doğrulayarak kuruyor; valid `.test` receiver fixture'ını ve missing/empty/directory/reserved/invalid config negatif vakalarını kullanıyor. Bu statik/config doğrulaması gerçek webhook teslimat testi değildir.
+
+
+**Release readiness devam işi 28 (2026-10-12):** Offsite backup systemd unit'i capability bounding set ve ambient capabilities'i boşaltacak, setuid/setgid kullanımını kapatacak ve UNIX/IPv4/IPv6 socket ailelerini allowlist edecek şekilde daraltıldı. Backup CI job'u bu privilege policy'yi statik olarak zorunlu kılıyor. Bu, servis sürecinin yerel Linux yetkilerini azaltır; Docker grubunun host root-equivalent daemon erişimini çözmez. Runbook bu sınırı ve rootless/backup-agent alternatifi netleştiriyor. Unit gerçek hostta çalıştırılmadığından systemd sürümü/daemon davranışı hedef işletim sisteminde ayrıca doğrulanmalı.
