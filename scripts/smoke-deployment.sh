@@ -20,6 +20,14 @@ if [[ "$status" != 200 ]]; then
   exit 1
 fi
 
+headers="$(curl "${curl_opts[@]}" --silent --show-error --dump-header - --output /dev/null "$site_url/")"
+for header in Strict-Transport-Security X-Content-Type-Options X-Frame-Options Referrer-Policy Permissions-Policy; do
+  if ! grep -Eiq "^$header:" <<<"$headers"; then
+    echo "Required security response header is missing: $header" >&2
+    exit 1
+  fi
+done
+
 curl "${curl_opts[@]}" --fail --silent --show-error "$site_url/api/v1/auth/csrf" --output /dev/null
 status="$(curl "${curl_opts[@]}" --silent --show-error --output /dev/null --write-out '%{http_code}' "$site_url/api/v1/auth/me")"
 if [[ "$status" != 401 ]]; then
