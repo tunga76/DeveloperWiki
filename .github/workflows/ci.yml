@@ -127,6 +127,15 @@ jobs:
           bash -n scripts/backup-postgres-offsite.sh
           bash -n scripts/validate-production-config.sh
           bash -n scripts/smoke-deployment.sh
+          public_ports_ok='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"api":{}}}'
+          ops_loopback_ok='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"grafana":{"ports":[{"target":3000,"host_ip":"127.0.0.1"}]}}}'
+          public_api_port='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"api":{"ports":[{"target":3001,"host_ip":"0.0.0.0"}]}}}'
+          jq -e -f scripts/production-compose-ports.jq <<<"$public_ports_ok" >/dev/null
+          jq -e -f scripts/production-compose-ports.jq <<<"$ops_loopback_ok" >/dev/null
+          if jq -e -f scripts/production-compose-ports.jq <<<"$public_api_port" >/dev/null; then
+            echo "Port policy accepted a public API port" >&2
+            exit 1
+          fi
           image_digest="sha256:$(printf '0%.0s' {1..64})"
           cat > "$DEPLOY_ENV_FILE" <<EOF
           SITE_ADDRESS=wiki.example.test
