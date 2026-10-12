@@ -225,13 +225,18 @@ jobs:
               exit 1
             fi
           done < <(grep -E '^[A-Z_]+_IMAGE=' .env.production.example)
-          public_ports_ok='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"api":{}}}'
-          ops_loopback_ok='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"grafana":{"ports":[{"target":3000,"host_ip":"127.0.0.1"}]}}}'
-          public_api_port='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"api":{"ports":[{"target":3001,"host_ip":"0.0.0.0"}]}}}'
+          public_ports_ok='{"services":{"caddy":{"ports":[{"target":80,"published":"80","protocol":"tcp"},{"target":443,"published":"443","protocol":"tcp"},{"target":443,"published":"443","protocol":"udp"}]},"api":{}}}'
+          ops_loopback_ok='{"services":{"caddy":{"ports":[{"target":80,"published":"80","protocol":"tcp"},{"target":443,"published":"443","protocol":"tcp"},{"target":443,"published":"443","protocol":"udp"}]},"grafana":{"ports":[{"target":3000,"published":"3002","protocol":"tcp","host_ip":"127.0.0.1"}]}}}'
+          public_api_port='{"services":{"caddy":{"ports":[{"target":80,"published":"80","protocol":"tcp"},{"target":443,"published":"443","protocol":"tcp"},{"target":443,"published":"443","protocol":"udp"}]},"api":{"ports":[{"target":3001,"published":"3001","protocol":"tcp","host_ip":"0.0.0.0"}]}}}'
+          caddy_alternate_public_port='{"services":{"caddy":{"ports":[{"target":80,"published":"8080","protocol":"tcp"},{"target":443,"published":"443","protocol":"tcp"},{"target":443,"published":"443","protocol":"udp"}]},"api":{}}}'
           jq -e -f scripts/production-compose-ports.jq <<<"$public_ports_ok" >/dev/null
           jq -e -f scripts/production-compose-ports.jq <<<"$ops_loopback_ok" >/dev/null
           if jq -e -f scripts/production-compose-ports.jq <<<"$public_api_port" >/dev/null; then
             echo "Port policy accepted a public API port" >&2
+            exit 1
+          fi
+          if jq -e -f scripts/production-compose-ports.jq <<<"$caddy_alternate_public_port" >/dev/null; then
+            echo "Port policy accepted an alternate public Caddy host port" >&2
             exit 1
           fi
           image_digest="sha256:$(printf '0%.0s' {1..64})"
