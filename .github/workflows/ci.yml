@@ -134,6 +134,12 @@ jobs:
           done
           bash -n scripts/validate-production-config.sh
           bash -n scripts/smoke-deployment.sh
+          while IFS='=' read -r key value; do
+            if [[ "$key" == *_IMAGE && ! "$value" =~ @sha256:[a-f0-9]{64}$ ]]; then
+              echo "Production example image is not pinned by sha256 digest: $key" >&2
+              exit 1
+            fi
+          done < <(grep -E '^[A-Z_]+_IMAGE=' .env.production.example)
           public_ports_ok='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"api":{}}}'
           ops_loopback_ok='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"grafana":{"ports":[{"target":3000,"host_ip":"127.0.0.1"}]}}}'
           public_api_port='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"api":{"ports":[{"target":3001,"host_ip":"0.0.0.0"}]}}}'
