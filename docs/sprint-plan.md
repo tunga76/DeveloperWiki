@@ -220,3 +220,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 30 (2026-10-12):** Backup systemd unit'inin `ExecStart` satırı, çalışma ağacında executable bit'i bulunmayan shell script'i doğrudan başlattığı için erişim hatasına yol açabilirdi. Unit `/usr/bin/bash` ile açıkça çağıracak şekilde düzeltildi; CI tam komut satırını kontrol ediyor ve systemd parser fixture'ında script yolunu runner workspace'ine uyarlıyor. Hostta unit/service kullanıcısı ile Docker socket erişimi ayrıca doğrulanmalı.
+
+
+**Release readiness devam işi 31 (2026-10-12):** Monitoring runbook'u mevcut optional Alertmanager overlay'iyle tutarlı hâle getirildi. Monitoring CI job'u Prometheus config/rule doğrulamasına ek olarak Grafana dashboard JSON'unda UID, dört beklenen panel ve her panelde PromQL target invariant'larını denetliyor; datasource/provider provisioning yolları da kontrol ediliyor. Bu statik doğrulama Grafana'nın canlı provision edildiğini veya Alertmanager webhook'unun teslim edildiğini kanıtlamaz.
