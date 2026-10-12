@@ -304,3 +304,11 @@ jobs:
               prom/prometheus:v3.7.3 \
               check config "/etc/prometheus/$config"
           done
+          jq -e '
+            .uid == "developer-wiki-api" and
+            (.panels | length == 4) and
+            ([.panels[].title] | sort) == ["API 5xx error rate", "API mean request latency", "API status", "Scrape targets"] and
+            all(.panels[]; all(.targets[]; (.expr | type == "string" and length > 0)))
+          ' infrastructure/monitoring/grafana/provisioning/dashboards/developer-wiki.json >/dev/null
+          grep -Fq 'url: http://prometheus:9090' infrastructure/monitoring/grafana/provisioning/datasources/prometheus.yml
+          grep -Fq 'path: /etc/grafana/provisioning/dashboards' infrastructure/monitoring/grafana/provisioning/dashboards/provider.yml
