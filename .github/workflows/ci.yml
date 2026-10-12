@@ -201,15 +201,16 @@ jobs:
             fi
           }
           cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/missing-secret.env"
-          printf 'DATABASE_URL_SECRET_FILE=%s\\n' "$RUNNER_TEMP/does-not-exist" >> "$RUNNER_TEMP/missing-secret.env"
+          printf 'DATABASE_URL_SECRET_FILE=%s\n' "$RUNNER_TEMP/does-not-exist" >> "$RUNNER_TEMP/missing-secret.env"
           assert_config_rejects "$RUNNER_TEMP/missing-secret.env" DATABASE_URL_SECRET_FILE
           touch "$RUNNER_TEMP/empty-secret"
           cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/empty-secret.env"
-          printf 'POSTGRES_PASSWORD_FILE=%s\\n' "$RUNNER_TEMP/empty-secret" >> "$RUNNER_TEMP/empty-secret.env"
+          printf 'POSTGRES_PASSWORD_FILE=%s\n' "$RUNNER_TEMP/empty-secret" >> "$RUNNER_TEMP/empty-secret.env"
           assert_config_rejects "$RUNNER_TEMP/empty-secret.env" POSTGRES_PASSWORD_FILE
           mkdir -p "$RUNNER_TEMP/secret-directory"
+          assert_config_rejects "$RUNNER_TEMP/secret-directory" "Cannot read deployment env file"
           cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/directory-secret.env"
-          printf 'MINIO_ROOT_PASSWORD_FILE=%s\\n' "$RUNNER_TEMP/secret-directory" >> "$RUNNER_TEMP/directory-secret.env"
+          printf 'MINIO_ROOT_PASSWORD_FILE=%s\n' "$RUNNER_TEMP/secret-directory" >> "$RUNNER_TEMP/directory-secret.env"
           assert_config_rejects "$RUNNER_TEMP/directory-secret.env" MINIO_ROOT_PASSWORD_FILE
           bash scripts/validate-production-config.sh
           cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
