@@ -125,6 +125,13 @@ jobs:
           DEPLOY_ENV_FILE: ${{ runner.temp }}/developer-wiki-deploy.env
         run: |
           bash -n scripts/backup-postgres-offsite.sh
+          touch "$RUNNER_TEMP/backup-validation.env"
+          for backup_uri in "s3:///missing-bucket" "https://example.invalid/backups" "s3://bucket/path with-space"; do
+            if DEPLOY_ENV_FILE="$RUNNER_TEMP/backup-validation.env" BACKUP_S3_URI="$backup_uri" AGE_RECIPIENT=age1fixture bash scripts/backup-postgres-offsite.sh; then
+              echo "Backup script accepted invalid destination: $backup_uri" >&2
+              exit 1
+            fi
+          done
           bash -n scripts/validate-production-config.sh
           bash -n scripts/smoke-deployment.sh
           public_ports_ok='{"services":{"caddy":{"ports":[{"target":80},{"target":443},{"target":443}]},"api":{}}}'
