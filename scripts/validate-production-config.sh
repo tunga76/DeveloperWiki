@@ -2,7 +2,7 @@
 set -euo pipefail
 
 : "${DEPLOY_ENV_FILE:?Set DEPLOY_ENV_FILE to the deployment env file}"
-if [[ ! -r "$DEPLOY_ENV_FILE" ]]; then
+if [[ ! -f "$DEPLOY_ENV_FILE" || ! -r "$DEPLOY_ENV_FILE" ]]; then
   echo "Cannot read deployment env file: $DEPLOY_ENV_FILE" >&2
   exit 1
 fi
