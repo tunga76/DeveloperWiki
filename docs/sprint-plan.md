@@ -205,3 +205,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 25 (2026-10-12):** Production config validator deploy env dosyası için normal dosya/okunabilirlik şartı koyuyor. CI’da eksik secret yolu, boş secret dosyası ve dosya yerine dizin negatif senaryoları; hata çıktısında değerlerin gösterilmemesiyle birlikte kapsanıyor. Bu testlerin push-triggered run sonucu GitHub bağlantısından görünür değil.
+
+
+**Release readiness devam işi 26 (2026-10-12):** CI preflight hata testleri, eksik JWT secret-file değişkeni ve bozuk image digest'ini sentinel değerlerle dener; doğrulayıcının ilgili değişken adını verip supplied value'yu hata çıktısına taşımadığını kontrol eder. Push-triggered Actions çalışmasının sonucu mevcut GitHub entegrasyonundan okunamadı.
