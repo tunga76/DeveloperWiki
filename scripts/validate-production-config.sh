@@ -27,6 +27,28 @@ for name in "${image_vars[@]}"; do
   fi
 done
 
+secret_file_vars=(
+  DATABASE_URL_SECRET_FILE JWT_SECRET_FILE POSTGRES_PASSWORD_FILE
+  MINIO_ROOT_PASSWORD_FILE GRAFANA_ADMIN_PASSWORD_FILE
+)
+for name in "${secret_file_vars[@]}"; do
+  file_path="${!name:-}"
+  if [[ -z "$file_path" || ! -f "$file_path" || ! -r "$file_path" ]]; then
+    echo "$name must point to a readable secret file" >&2
+    exit 1
+  fi
+  if [[ ! -s "$file_path" ]]; then
+    echo "$name must not point to an empty file" >&2
+    exit 1
+  fi
+done
+
+jwt_secret="$(< "$JWT_SECRET_FILE")"
+if (( ${#jwt_secret} < 32 )); then
+  echo "JWT_SECRET_FILE must contain at least 32 characters" >&2
+  exit 1
+fi
+
 compose_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infrastructure/docker" && pwd)"
 compose_files=(-f "$compose_dir/compose.yaml" -f "$compose_dir/compose.production.yaml")
 if [[ "${ENABLE_ALERTMANAGER:-false}" == "true" ]]; then
