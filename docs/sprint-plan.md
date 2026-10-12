@@ -217,3 +217,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 29 (2026-10-12):** Backup service policy CI kapsamı satır eşleşmelerine ek olarak `systemd-analyze verify` ile Ubuntu runner üzerinde unit parser doğrulamasını çalıştıracak şekilde genişletildi. CI geçici bir unit kopyasında runner'a özgü çalışma dizini, env dosyası ve script yolunu kullanıyor; `User`/`Group` alanlarını runner kimlik veritabanına bağlı olduklarından parser kopyasından çıkarırken gerçek unit'teki değerleri ayrıca statik denetliyor. Bu check systemd unit syntax/config doğrulamasıdır; gerçek hostta servis ve Docker socket çalışma testi değildir.
+
+
+**Release readiness devam işi 30 (2026-10-12):** Backup systemd unit'inin `ExecStart` satırı, çalışma ağacında executable bit'i bulunmayan shell script'i doğrudan başlattığı için erişim hatasına yol açabilirdi. Unit `/usr/bin/bash` ile açıkça çağıracak şekilde düzeltildi; CI tam komut satırını kontrol ediyor ve systemd parser fixture'ında script yolunu runner workspace'ine uyarlıyor. Hostta unit/service kullanıcısı ile Docker socket erişimi ayrıca doğrulanmalı.
