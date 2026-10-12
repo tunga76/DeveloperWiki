@@ -64,3 +64,5 @@ Gerçek staging/production ortamı veya secret manager bağlantısı bu reposito
 - Backup timer alanları CI'da kontrol edilir ve `OnCalendar` systemd takvim parser'ından geçirilir. 02:15 ve 30 dakika gecikme yalnız örnektir; onaylı RPO/bakım penceresine göre hostta uyarlanıp doğrulanmalı.
 
 - Offsite backup S3 nesnelerinin boyutunu yerel encrypted dump/sidecar ile karşılaştırır; CI başarı ve mismatch senaryolarını fake CLI'larla doğrular. Gerçek provider üzerinde checksum/restore tatbikatı ayrıca gereklidir.
+
+- Production port policy rendered Compose üzerinde Caddy için published host port/protocol eşleşmesini 80/tcp, 443/tcp, 443/udp ile sınırlar; başka servislerin host portları loopback olmalıdır. CI alternatif public Caddy portu negatif fixture'ını da reddetmeli.
