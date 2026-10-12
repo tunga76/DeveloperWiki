@@ -9,14 +9,19 @@ if [[ ! -r "$DEPLOY_ENV_FILE" ]]; then
 fi
 
 site_url="${SITE_URL%/}"
-status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "$site_url/")"
+if [[ "$site_url" != https://* ]]; then
+  echo "SITE_URL must use HTTPS" >&2
+  exit 1
+fi
+curl_opts=(--proto '=https' --tlsv1.2 --connect-timeout 5 --max-time 20)
+status="$(curl "${curl_opts[@]}" --silent --show-error --output /dev/null --write-out '%{http_code}' "$site_url/")"
 if [[ "$status" != 200 ]]; then
   echo "Web landing returned HTTP $status" >&2
   exit 1
 fi
 
-curl --fail --silent --show-error "$site_url/api/v1/auth/csrf" --output /dev/null
-status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "$site_url/api/v1/auth/me")"
+curl "${curl_opts[@]}" --fail --silent --show-error "$site_url/api/v1/auth/csrf" --output /dev/null
+status="$(curl "${curl_opts[@]}" --silent --show-error --output /dev/null --write-out '%{http_code}' "$site_url/api/v1/auth/me")"
 if [[ "$status" != 401 ]]; then
   echo "Unauthenticated auth/me returned HTTP $status (expected 401)" >&2
   exit 1
