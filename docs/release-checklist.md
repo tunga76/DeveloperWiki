@@ -9,7 +9,7 @@
 - [ ] Production `JWT_SECRET` secret manager'dan gelir ve en az 32 rastgele karakterdir; yerel Compose varsayılanları kullanılmaz. Config validator secret dosyasının boş olmadığını, trim sonrası minimum uzunluğu ve local/placeholder değerleri kontrol eder.
 - [ ] HTTPS reverse proxy, gerçek `WEB_ORIGIN`, `COOKIE_SECURE=true`; host firewall yalnız gerekli TLS girişini açar.
 - [ ] PostgreSQL, Redis, MinIO ve Grafana dış ağa açılmaz; Grafana kimlik doğrulaması ve erişim kısıtı vardır.
-- [ ] Operations UI erişimi korumalı ağ veya SSH tüneli üzerinden doğrulandı; Alertmanager receiver staging'de test edildi.
+- [ ] Operations UI erişimi korumalı ağ veya SSH tüneli üzerinden doğrulandı; Alertmanager receiver staging'de test edildi. Config validator Alertmanager dosyasını `amtool` strict-mode ile denetler; gerçek receiver teslimatı yine staging gerektirir.
 - [ ] MinIO registry kaynağı/provenance kararı onaylanmıştır.
 - [ ] Migration, staging verisinin yedeğiyle denenmiş; geri dönüş/ileri düzeltme prosedürü kayıtlıdır.
 - [x] `infrastructure/docker/compose.production.yaml` secret fixture'larıyla CI'da doğrulandı; yalnız Caddy 80/443'ü public yayımlar, diğer yayımlı portlar loopback'e bağlanır (run `38277681767`).
@@ -35,7 +35,7 @@ Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatıl
 Son doğrulanabilir durum (2026-10-12):
 
 - `.env.production.example` içindeki tüm image örnekleri SHA-256 digest biçiminde; production config CI job'u bu invariant'ı denetleyecek şekilde yapılandırıldı.
-- Production config validator normal ve okunabilir deploy env dosyası ister; CI eksik, boş ve dosya olmayan secret yollarını, eksik JWT değişkenini ve hatalı image digest'ini reddetmeye; sentinel değerleri hata çıktısında göstermemeye yönelik testler içerir.
+- Production config validator normal ve okunabilir deploy env dosyası ister; CI eksik, boş ve dosya olmayan secret yollarını, eksik JWT değişkenini ve hatalı image digest'ini reddetmeye; sentinel değerleri hata çıktısında göstermemeye yönelik testler içerir. Alertmanager etkinse config dosyası ve amtool strict validation da zorunludur; reserved endpoint ile malformed config reddedilecek şekilde CI kapsamı eklendi.
 - `.github/workflows/ci.yml` ve bu checklist çalışma ağacıyla yayın clone'unda aynı içerikte. Workflow; fresh PostgreSQL migration, lint/typecheck/build/API test/audit, browser E2E, Trivy API/web image scan, production Compose validation ve Prometheus config/rule validation job'larını içeriyor.
 - Önceki yerel doğrulamalar: dependency audit temiz; API 21/21; typecheck/build/lint; Playwright 4/4; production API/Web image build ve yerel CRITICAL/HIGH taramaları; production Compose ve Prometheus doğrulamaları; disposable PostgreSQL migration ve izole PostgreSQL/MinIO backup-restore tatbikatı başarılı.
 - `master` `6e619cf` için Actions run `38168504143` 2026-10-11 tarihinde tamamlandı; beş job'un tamamı başarılı. Bu run kalite, E2E, Trivy API/web taraması, Compose yapılandırma ve monitoring doğrulamalarını kapsadı.
