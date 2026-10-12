@@ -14,7 +14,7 @@
 - [ ] Migration, staging verisinin yedeğiyle denenmiş; geri dönüş/ileri düzeltme prosedürü kayıtlıdır.
 - [x] `infrastructure/docker/compose.production.yaml` production config secret fixture'ları ve digest örnekleriyle CI'da doğrulandı (run `38168504143`).
 - [ ] Gerçek production image digest'leri onaylı registry'den seçilip yayın ortamında kullanılmalı; MinIO kaynağı/provenance kararı onaylanmalı.
-- [ ] `scripts/smoke-deployment.sh` staging URL'si üzerinde TLS, web/API proxy, auth ve API/DB readiness kontrollerini geçti.
+- [ ] `scripts/smoke-deployment.sh` gerçek staging URL'si üzerinde TLS, web/API proxy, auth ve API/DB readiness kontrollerini geçti.
 
 ## Operasyon
 
@@ -37,7 +37,7 @@ Son doğrulanabilir durum (2026-10-12):
 - `.github/workflows/ci.yml` ve bu checklist çalışma ağacıyla yayın clone'unda aynı içerikte. Workflow; fresh PostgreSQL migration, lint/typecheck/build/API test/audit, browser E2E, Trivy API/web image scan, production Compose validation ve Prometheus config/rule validation job'larını içeriyor.
 - Önceki yerel doğrulamalar: dependency audit temiz; API 21/21; typecheck/build/lint; Playwright 4/4; production API/Web image build ve yerel CRITICAL/HIGH taramaları; production Compose ve Prometheus doğrulamaları; disposable PostgreSQL migration ve izole PostgreSQL/MinIO backup-restore tatbikatı başarılı.
 - `master` `6e619cf` için Actions run `38168504143` 2026-10-11 tarihinde tamamlandı; beş job'un tamamı başarılı. Bu run kalite, E2E, Trivy API/web taraması, Compose yapılandırma ve monitoring doğrulamalarını kapsadı.
-- Gerçek staging, production secrets, dış bucket, host erişimi ve onaylı işletme kararları bu çalışma alanında yok; bunlara bağlı checklist maddeleri açık kalıyor.
+- Smoke script'i artık HTTPS'i zorunlu tutuyor, curl çağrılarını TLS 1.2+ ile sınırlandırıyor ve bağlantı/istek timeout'u uyguluyor; CI shell syntax kontrolü eklendi. Bu yalnızca script güvenlik kontrolüdür, gerçek staging smoke yerine geçmez. Gerçek staging, production secrets, dış bucket, host erişimi ve onaylı işletme kararları bu çalışma alanında yok; bunlara bağlı checklist maddeleri açık kalıyor.
 
 Production kurulumu için operatör girdileri:
 
