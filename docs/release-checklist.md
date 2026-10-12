@@ -2,17 +2,18 @@
 
 ## Uygulama ve güvenlik
 
-- [ ] CI lint/typecheck/build/API testleri başarılı; dependency audit ve API/web container scan sonuçları gözden geçirildi.
+- [x] CI lint/typecheck/build/API testleri başarılı; dependency audit ve API/web container scan sonuçları gözden geçirildi (master `6e619cf`, Actions run `38168504143`).
 - [x] GitHub Actions checkout, setup-node ve Trivy action referansları değişmez commit SHA'larına pinlendi.
 - [x] Playwright suite kayıt/workspace, login/profil/tema/çıkış, kategori/doküman editörü/sürüm ve arama/favori ana akışlarını kapsıyor; CI browser job'u eklendi.
-- [ ] Son `master` commit'i için GitHub browser E2E job'u yeşil.
+- [x] Son `master` commit'i için GitHub browser E2E job'u yeşil (`6e619cf`, run `38168504143`).
 - [ ] Production `JWT_SECRET` secret manager'dan gelir ve en az 32 rastgele karakterdir; yerel Compose varsayılanları kullanılmaz.
 - [ ] HTTPS reverse proxy, gerçek `WEB_ORIGIN`, `COOKIE_SECURE=true`; host firewall yalnız gerekli TLS girişini açar.
 - [ ] PostgreSQL, Redis, MinIO ve Grafana dış ağa açılmaz; Grafana kimlik doğrulaması ve erişim kısıtı vardır.
 - [ ] Operations UI erişimi korumalı ağ veya SSH tüneli üzerinden doğrulandı; Alertmanager receiver staging'de test edildi.
 - [ ] MinIO registry kaynağı/provenance kararı onaylanmıştır.
 - [ ] Migration, staging verisinin yedeğiyle denenmiş; geri dönüş/ileri düzeltme prosedürü kayıtlıdır.
-- [ ] `infrastructure/docker/compose.production.yaml` ile production config doğrulandı; image değerleri digest pinli ve approved registry'den geliyor.
+- [x] `infrastructure/docker/compose.production.yaml` production config secret fixture'ları ve digest örnekleriyle CI'da doğrulandı (run `38168504143`).
+- [ ] Gerçek production image digest'leri onaylı registry'den seçilip yayın ortamında kullanılmalı; MinIO kaynağı/provenance kararı onaylanmalı.
 - [ ] `scripts/smoke-deployment.sh` staging URL'si üzerinde TLS, web/API proxy, auth ve API/DB readiness kontrollerini geçti.
 
 ## Operasyon
@@ -29,7 +30,14 @@
 
 ## Mevcut release engelleri
 
-Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatılması ve API/DB/MinIO/Grafana secret dosyalarını bağlama desteği sağlar. Şifreli PostgreSQL backup script'i S3 uyumlu off-host hedefe yükleme ve checksum sidecar doğrulaması sağlar; gerçek bucket/kimlik bilgisi/lifecycle ile çalıştırılmadı. API image runtime'ı production bağımlılıklarına daraltıldı, Prisma migration CLI'si doğrulandı ve API/web production image taramalarında CRITICAL/HIGH bulgu çıkmadı. Yerel dependency audit temiz; API testleri, workspace typecheck/build ve dört Playwright senaryosu geçti. Dört migration disposable PostgreSQL 17'de başarılı uygulandı ve bu kontrol CI'a eklendi; staging snapshot'ı ve geri dönüş planıyla prova yapılmadı. İzole PostgreSQL/MinIO tatbikatında şifreli dump ve checksum geri indirildi, ayrı PostgreSQL restore'u 9 saniyede tamamlandı; bu küçük yerel fixture gerçek RTO ölçümü değildir. `ad66d71` run'ındaki Trivy setup rapor üretmeden başarısız oldu; scanner release-version input'undaki `v` öneki düzeltildi, JSON diagnostics eklendi. Düzeltilmiş run sonucu henüz doğrulanmadı.
+Production Compose katmanı TLS reverse proxy, iç servis portlarının kapatılması ve API/DB/MinIO/Grafana secret dosyalarını bağlama desteği sağlar. Şifreli PostgreSQL backup script'i S3 uyumlu off-host hedefe yükleme ve checksum sidecar doğrulaması sağlar; gerçek bucket/kimlik bilgisi/lifecycle ile çalıştırılmadı. API image runtime'ı production bağımlılıklarına daraltıldı, Prisma migration CLI'si doğrulandı ve API/web production image taramalarında CRITICAL/HIGH bulgu çıkmadı. Yerel dependency audit temiz; API testleri, workspace typecheck/build ve dört Playwright senaryosu geçti. Dört migration disposable PostgreSQL 17'de başarılı uygulandı ve bu kontrol CI'a eklendi; staging snapshot'ı ve geri dönüş planıyla prova yapılmadı. İzole PostgreSQL/MinIO tatbikatında şifreli dump ve checksum geri indirildi, ayrı PostgreSQL restore'u 9 saniyede tamamlandı; bu küçük yerel fixture gerçek RTO ölçümü değildir. `ad66d71` run'ındaki Trivy setup rapor üretmeden başarısız oldu; scanner release-version input'undaki `v` öneki düzeltildi ve JSON diagnostics eklendi. `6e619cf` için Actions run `38168504143` beş job'un tamamında başarılı oldu: quality (migration, audit, API test, lint, typecheck, build), browser-e2e, container-scan (API ve web), production-compose-config ve monitoring-config.
+
+Son doğrulanabilir durum (2026-10-12):
+
+- `.github/workflows/ci.yml` ve bu checklist çalışma ağacıyla yayın clone'unda aynı içerikte. Workflow; fresh PostgreSQL migration, lint/typecheck/build/API test/audit, browser E2E, Trivy API/web image scan, production Compose validation ve Prometheus config/rule validation job'larını içeriyor.
+- Önceki yerel doğrulamalar: dependency audit temiz; API 21/21; typecheck/build/lint; Playwright 4/4; production API/Web image build ve yerel CRITICAL/HIGH taramaları; production Compose ve Prometheus doğrulamaları; disposable PostgreSQL migration ve izole PostgreSQL/MinIO backup-restore tatbikatı başarılı.
+- `master` `6e619cf` için Actions run `38168504143` 2026-10-11 tarihinde tamamlandı; beş job'un tamamı başarılı. CI, E2E, Trivy API/web scan, Compose ve monitoring checklist maddeleri doğrulandı.
+- Gerçek staging, production secrets, dış bucket, host erişimi ve onaylı işletme kararları bu çalışma alanında yok; bunlara bağlı checklist maddeleri açık kalıyor.
 
 Production kurulumu için operatör girdileri:
 
