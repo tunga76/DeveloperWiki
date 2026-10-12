@@ -213,10 +213,10 @@ jobs:
           printf 'MINIO_ROOT_PASSWORD_FILE=%s\n' "$RUNNER_TEMP/secret-directory" >> "$RUNNER_TEMP/directory-secret.env"
           assert_config_rejects "$RUNNER_TEMP/directory-secret.env" MINIO_ROOT_PASSWORD_FILE
           cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/missing-jwt-path.env"
-          printf 'JWT_SECRET_FILE=\\n' >> "$RUNNER_TEMP/missing-jwt-path.env"
+          printf 'JWT_SECRET_FILE=\n' >> "$RUNNER_TEMP/missing-jwt-path.env"
           assert_config_rejects "$RUNNER_TEMP/missing-jwt-path.env" JWT_SECRET_FILE
           cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/invalid-image.env"
-          printf 'WEB_IMAGE=registry.example/private/DO-NOT-PRINT@bad-digest\\n' >> "$RUNNER_TEMP/invalid-image.env"
+          printf 'WEB_IMAGE=registry.example/private/DO-NOT-PRINT@bad-digest\n' >> "$RUNNER_TEMP/invalid-image.env"
           assert_config_rejects "$RUNNER_TEMP/invalid-image.env" WEB_IMAGE DO-NOT-PRINT
           bash scripts/validate-production-config.sh
           cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
