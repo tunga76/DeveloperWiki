@@ -12,7 +12,7 @@ Bu katman Linux host üzerinde Docker Compose v2.24.4 veya sonrası içindir; ba
    - `POSTGRES_PASSWORD_FILE`: DB kullanıcısının parolası.
    - `MINIO_ROOT_PASSWORD_FILE`: MinIO root parolası.
    - `GRAFANA_ADMIN_PASSWORD_FILE`: Grafana admin parolası.
-   - `ALERTMANAGER_CONFIG_FILE` (opsiyonel): onaylı receiver içeren config; overlay açıldığında `amtool` ile strict syntax kontrolünden geçer.
+   - `ALERTMANAGER_CONFIG_FILE` (opsiyonel): onaylı receiver içeren config; overlay açıldığında `amtool` ile strict syntax kontrolünden geçer. Validator için PATH'te runtime Alertmanager image'ıyla aynı release'ten `amtool` bulunmalıdır.
 4. Deploy ortamında `SITE_ADDRESS`, `WEB_IMAGE`, `API_IMAGE`, tüm digest-pinned service image değerleri, `MINIO_ROOT_USER` ve beş secret dosyasının yolunu tanımlayın.
 
 `.env.production.example` değişken adlarını ve secret dosyası yol biçimini gösterir. Image digest'leri sıfırlarla doldurulmuş örnek değerlerdir ve gerçek digest'lerle değiştirilmelidir; validator tüm sekiz image digest'ini kontrol eder. Deploy env dosyasının okunabilir normal dosya olmasını; secret dosyalarının okunabilir, normal dosya ve boş olmayan değerler olmasını; JWT secret'ının trim sonrası en az 32 karakter olmasını ve yerel/placeholder değer olmamasını da config aşamasında doğrular. Kopyasını repo dışındaki deploy env dosyasında gerçek değerlerle değiştirin.
