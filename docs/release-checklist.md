@@ -62,3 +62,5 @@ Gerçek staging/production ortamı veya secret manager bağlantısı bu reposito
 - Son `master` güncellemelerinin push-triggered Actions run sonucu bu GitHub bağlantısından görüntülenemedi; yeni systemd/Grafana CI adımları yeşil run ile henüz teyit edilmiş sayılmaz.
 
 - Backup timer alanları CI'da kontrol edilir ve `OnCalendar` systemd takvim parser'ından geçirilir. 02:15 ve 30 dakika gecikme yalnız örnektir; onaylı RPO/bakım penceresine göre hostta uyarlanıp doğrulanmalı.
+
+- Offsite backup S3 nesnelerinin boyutunu yerel encrypted dump/sidecar ile karşılaştırır; CI başarı ve mismatch senaryolarını fake CLI'larla doğrular. Gerçek provider üzerinde checksum/restore tatbikatı ayrıca gereklidir.
