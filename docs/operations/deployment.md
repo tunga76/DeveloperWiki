@@ -28,7 +28,7 @@ docker compose --env-file /etc/developer-wiki/deploy.env -f infrastructure/docke
 SITE_URL=https://wiki.example.com DEPLOY_ENV_FILE=/etc/developer-wiki/deploy.env bash scripts/smoke-deployment.sh
 ```
 
-Smoke script TLS üzerinden web'i ve zorunlu güvenlik response header'larını, API proxy/CSRF ve unauthenticated auth yanıtını, ayrıca Compose network'ünde API `/ready` + DB bağlantısını kontrol eder. DB/cache/object store/monitoring servisleri yalnız Compose network'ünde kalır. API konteyneri başlangıçta `prisma migrate deploy` çalıştırır; production migration öncesi DB yedeği alın ve release checklist'teki migration/rollback maddelerini yerine getirin.
+Smoke script TLS üzerinden web'i ve zorunlu güvenlik response header'larını, API proxy/CSRF ve unauthenticated auth yanıtını, ayrıca Compose network'ünde API `/ready` + DB bağlantısını kontrol eder. `DEPLOY_ENV_FILE` içindeki `ENABLE_OPS_UI=true` ve `ENABLE_ALERTMANAGER=true` ayarları verilmişse ilgili Compose overlay'lerini health kontrolünde de kullanır; CI dış HTTP/Docker erişimi olmadan varsayılan ve iki overlay senaryosunu fake `curl`/`docker` ile sınar. DB/cache/object store/monitoring servisleri yalnız Compose network'ünde kalır. API konteyneri başlangıçta `prisma migrate deploy` çalıştırır; production migration öncesi DB yedeği alın ve release checklist'teki migration/rollback maddelerini yerine getirin.
 
 ## Geri alma
 
