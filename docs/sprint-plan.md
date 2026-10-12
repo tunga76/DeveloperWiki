@@ -193,3 +193,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 21 (2026-10-12):** `.env.production.example` içindeki tüm production image referansları doğrulayıcının beklediği SHA-256 digest biçimine getirildi. Production Compose CI job'u örnek dosyadaki her `*_IMAGE` değerinin digest ile bittiğini denetliyor; böylece dokümante edilen güvenli varsayılan ve validator/CI beklentisi tutarlı. Yerel statik doğrulama 8/8 image referansının 64 karakterli digest biçiminde olduğunu ve CI invariant kontrolünün bulunduğunu gösterdi. GitHub connector bu commit'in push-triggered Actions durumunu listeleyemediği için yeni run sonucu burada doğrulanamadı. Gerçek image digest/provenance onayı yine operatör girdisidir.
+
+
+**Release readiness devam işi 22 (2026-10-12):** `scripts/validate-production-config.sh` production secret dosyalarının mevcut, okunabilir, normal dosya ve boş olmadığını doğruluyor; `JWT_SECRET_FILE` uzunluğu 32 karakter altındaysa içerik göstermeden hata veriyor. Production Compose CI kısa JWT secret'ını reddetme ve geçerli fixture ile devam etme senaryolarını çalıştıracak şekilde güncellendi. Gerçek secret manager ve gerçek credential doğrulaması operatör ortamına bağlıdır; Actions push run durumu bu bağlantıda listelenemediğinden CI sonucu ayrıca doğrulanmalı.
