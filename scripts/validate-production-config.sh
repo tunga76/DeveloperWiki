@@ -58,7 +58,27 @@ fi
 compose_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infrastructure/docker" && pwd)"
 compose_files=(-f "$compose_dir/compose.yaml" -f "$compose_dir/compose.production.yaml")
 if [[ "${ENABLE_ALERTMANAGER:-false}" == "true" ]]; then
-  : "${ALERTMANAGER_CONFIG_FILE:?Set ALERTMANAGER_CONFIG_FILE to a configured Alertmanager file}"
+  alertmanager_config_file="${ALERTMANAGER_CONFIG_FILE:-}"
+  if [[ -z "$alertmanager_config_file" || ! -f "$alertmanager_config_file" || ! -r "$alertmanager_config_file" ]]; then
+    echo "ALERTMANAGER_CONFIG_FILE must point to a readable configuration file" >&2
+    exit 1
+  fi
+  if [[ ! -s "$alertmanager_config_file" ]]; then
+    echo "ALERTMANAGER_CONFIG_FILE must not point to an empty file" >&2
+    exit 1
+  fi
+  if grep -Fq '.invalid' "$alertmanager_config_file"; then
+    echo "ALERTMANAGER_CONFIG_FILE must replace reserved example endpoints" >&2
+    exit 1
+  fi
+  if ! command -v amtool >/dev/null 2>&1; then
+    echo "amtool is required to validate ALERTMANAGER_CONFIG_FILE" >&2
+    exit 1
+  fi
+  if ! amtool check-config "$alertmanager_config_file" --enable-feature=utf8-strict-mode >/dev/null 2>&1; then
+    echo "ALERTMANAGER_CONFIG_FILE failed Alertmanager strict configuration validation" >&2
+    exit 1
+  fi
   compose_files+=(-f "$compose_dir/compose.alertmanager.yaml")
 fi
 if [[ "${ENABLE_OPS_UI:-false}" == "true" ]]; then
