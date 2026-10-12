@@ -6,7 +6,7 @@
 - [x] GitHub Actions checkout, setup-node ve Trivy action referansları değişmez commit SHA'larına pinlendi.
 - [x] Playwright suite kayıt/workspace, login/profil/tema/çıkış, kategori/doküman editörü/sürüm ve arama/favori ana akışlarını kapsıyor; CI browser job'u eklendi.
 - [x] Son `master` commit'i için GitHub browser E2E job'u yeşil (`6e619cf`, run `38168504143`).
-- [ ] Production `JWT_SECRET` secret manager'dan gelir ve en az 32 rastgele karakterdir; yerel Compose varsayılanları kullanılmaz.
+- [ ] Production `JWT_SECRET` secret manager'dan gelir ve en az 32 rastgele karakterdir; yerel Compose varsayılanları kullanılmaz. Config validator secret dosyasının boş olmadığını ve minimum uzunluğu kontrol eder.
 - [ ] HTTPS reverse proxy, gerçek `WEB_ORIGIN`, `COOKIE_SECURE=true`; host firewall yalnız gerekli TLS girişini açar.
 - [ ] PostgreSQL, Redis, MinIO ve Grafana dış ağa açılmaz; Grafana kimlik doğrulaması ve erişim kısıtı vardır.
 - [ ] Operations UI erişimi korumalı ağ veya SSH tüneli üzerinden doğrulandı; Alertmanager receiver staging'de test edildi.
