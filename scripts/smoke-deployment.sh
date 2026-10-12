@@ -35,10 +35,23 @@ if [[ "$status" != 401 ]]; then
   exit 1
 fi
 
+set -a
+# Keep optional layer selection consistent with validate-production-config.sh.
+# shellcheck disable=SC1090
+source "$DEPLOY_ENV_FILE"
+set +a
+
 compose_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../infrastructure/docker" && pwd)"
-docker compose --env-file "$DEPLOY_ENV_FILE" \
-  -f "$compose_dir/compose.yaml" \
-  -f "$compose_dir/compose.production.yaml" \
+compose_args=(--env-file "$DEPLOY_ENV_FILE"
+  -f "$compose_dir/compose.yaml"
+  -f "$compose_dir/compose.production.yaml")
+if [[ "${ENABLE_OPS_UI:-false}" == "true" ]]; then
+  compose_args+=(-f "$compose_dir/compose.ops-access.yaml")
+fi
+if [[ "${ENABLE_ALERTMANAGER:-false}" == "true" ]]; then
+  compose_args+=(-f "$compose_dir/compose.alertmanager.yaml")
+fi
+docker compose "${compose_args[@]}" \
   exec -T api node -e \
   'fetch("http://127.0.0.1:3001/ready").then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))'
 
