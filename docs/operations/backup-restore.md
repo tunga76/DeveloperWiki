@@ -16,7 +16,7 @@ Production Compose ve secret injection hazırlığı için [deployment runbook'u
    bash scripts/backup-postgres-offsite.sh
    ```
 
-   Script PostgreSQL custom dump'ını container'dan stream eder, geçici host dosyasına yalnız age ile şifrelenmiş dump yazar, SHA-256 sidecar üretip ikisini S3 hedefe yükler ve her iki nesnenin varlığını kontrol eder. Başarılı çıktıdaki SHA-256'yı yedek envanterine kaydedin. Bucket lifecycle, versioning/object-lock ve IAM erişim politikasını ayrıca sağlayıcı tarafında tanımlayıp denetleyin.
+   Script PostgreSQL custom dump'ını container'dan stream eder, geçici host dosyasına yalnız age ile şifrelenmiş dump yazar, SHA-256 sidecar üretip ikisini S3 hedefe yükler; her iki nesnenin varlığını ve yerel dosyalarla byte boyutlarının eşleşmesini kontrol eder. Başarılı çıktıdaki SHA-256'yı yedek envanterine kaydedin. Bucket lifecycle, versioning/object-lock ve IAM erişim politikasını ayrıca sağlayıcı tarafında tanımlayıp denetleyin.
 
 3. Linux hostta örnek zamanlayıcıyı kurun. `/opt/developer-wiki` repo yolunu ve dedicated `developer-wiki-backup` kullanıcısını ortama göre uyarlayın. `backup.env` içinde `DEPLOY_ENV_FILE`, `BACKUP_S3_URI` ve `AGE_RECIPIENT` tanımlayın; deployment env dosyasına okuma izni verin. AWS erişimini instance role ile sağlayın; age private identity yedek hostuna koymayın.
 
