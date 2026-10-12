@@ -52,3 +52,5 @@ Production kurulumu için operatör girdileri:
 Gerçek staging/production ortamı veya secret manager bağlantısı bu repository'de bulunmuyor. Hosting, secrets, gerçek off-host restore ve işletim kararları onaylanıp doğrulanmadan checklist production-ready olarak işaretlenemez.
 
 - Backup systemd örneği servis process capabilities'lerini ve socket ailelerini sınırlar; CI statik policy invariant'larını denetler. Hostta unit çalıştırma ve Docker daemon root-equivalent erişiminin rootless/managed agent ile kaldırılması gerçek deployment ortamında doğrulanacak.
+
+- Backup unit CI'da gerçek unit ayarları için statik kontrollerden ve Ubuntu runner üzerinde systemd unit parser doğrulamasından geçecek şekilde yapılandırıldı. Runner doğrulaması production hostta Docker socket ve kullanıcı/grup izinlerinin çalıştığını kanıtlamaz.
