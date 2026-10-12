@@ -1,6 +1,6 @@
 # Production Compose deployment runbook'u
 
-Bu katman Linux host üzerinde Docker Compose v2.24.4 veya sonrası içindir; base Compose dosyasındaki yerel geliştirme portlarını kapatır. Yalnız Caddy 80/443 portlarını yayımlar ve otomatik TLS sertifikası alır. Önce DNS A/AAAA kayıtlarını hosta yönlendirin, firewall'da 80/443 açın ve diğer inbound portları kapatın.
+Bu katman Linux host üzerinde Docker Compose v2.24.4 veya sonrası içindir; base Compose dosyasındaki yerel geliştirme portlarını kapatır. Yalnız Caddy 80/443 portlarını yayımlar ve otomatik TLS sertifikası alır. Caddy response'lara HSTS, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` ve `Permissions-Policy` ekler, `Server` başlığını kaldırır. Önce DNS A/AAAA kayıtlarını hosta yönlendirin, firewall'da 80/443 açın ve diğer inbound portları kapatın.
 
 ## Hazırlık
 
@@ -28,7 +28,7 @@ docker compose --env-file /etc/developer-wiki/deploy.env -f infrastructure/docke
 SITE_URL=https://wiki.example.com DEPLOY_ENV_FILE=/etc/developer-wiki/deploy.env bash scripts/smoke-deployment.sh
 ```
 
-Smoke script TLS üzerinden web'i, API proxy/CSRF ve unauthenticated auth yanıtını, ayrıca Compose network'ünde API `/ready` + DB bağlantısını kontrol eder. DB/cache/object store/monitoring servisleri yalnız Compose network'ünde kalır. API konteyneri başlangıçta `prisma migrate deploy` çalıştırır; production migration öncesi DB yedeği alın ve release checklist'teki migration/rollback maddelerini yerine getirin.
+Smoke script TLS üzerinden web'i ve zorunlu güvenlik response header'larını, API proxy/CSRF ve unauthenticated auth yanıtını, ayrıca Compose network'ünde API `/ready` + DB bağlantısını kontrol eder. DB/cache/object store/monitoring servisleri yalnız Compose network'ünde kalır. API konteyneri başlangıçta `prisma migrate deploy` çalıştırır; production migration öncesi DB yedeği alın ve release checklist'teki migration/rollback maddelerini yerine getirin.
 
 ## Geri alma
 
