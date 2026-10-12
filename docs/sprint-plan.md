@@ -199,3 +199,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 23 (2026-10-12):** `scripts/smoke-deployment.sh` deploy env dosyasındaki `ENABLE_OPS_UI` ve `ENABLE_ALERTMANAGER` seçimlerini okuyup aynı production Compose overlay'leriyle API readiness kontrolü yapıyor. CI smoke script'ini sahte curl/docker komutlarıyla, dış ağa bağlanmadan hem overlay'siz hem iki overlay birlikte senaryosunda doğrulayacak şekilde genişletildi. Bu otomatik senaryo canlı staging TLS/auth/readiness sonucunun yerine geçmez; Actions push sonucu da connector'dan görünür değil.
+
+
+**Release readiness devam işi 24 (2026-10-12):** Production config validator, JWT secret dosyasını uygulamanın `trim()` davranışıyla aynı şekilde kırpıyor; böylece whitespace ile şişirilmiş kısa secret preflight'ten geçemiyor. Ayrıca uygulamanın reddettiği varsayılan local secret ve `replace-this` placeholder prefix'i deployment öncesi reddediliyor. CI bu üç negatif vakayı ve geçerli secret fixture'ını kapsıyor. Gerçek credential rotasyonu/secret manager uygulaması operatör girdisi olmaya devam eder.
