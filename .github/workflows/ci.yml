@@ -189,6 +189,28 @@ jobs:
             exit 1
           fi
           printf 'ci-validation-jwt-secret-at-least-32-chars' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
+          assert_config_rejects() {
+            local env_file="$1" expected="$2" output
+            if output="$(DEPLOY_ENV_FILE="$env_file" bash scripts/validate-production-config.sh 2>&1)"; then
+              echo "Production config accepted invalid secret file setup: $expected" >&2
+              exit 1
+            fi
+            if [[ "$output" != *"$expected"* || "$output" == *"validation-only"* ]]; then
+              echo "Secret preflight error was missing its field name or exposed file content" >&2
+              exit 1
+            fi
+          }
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/missing-secret.env"
+          printf 'DATABASE_URL_SECRET_FILE=%s\\n' "$RUNNER_TEMP/does-not-exist" >> "$RUNNER_TEMP/missing-secret.env"
+          assert_config_rejects "$RUNNER_TEMP/missing-secret.env" DATABASE_URL_SECRET_FILE
+          touch "$RUNNER_TEMP/empty-secret"
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/empty-secret.env"
+          printf 'POSTGRES_PASSWORD_FILE=%s\\n' "$RUNNER_TEMP/empty-secret" >> "$RUNNER_TEMP/empty-secret.env"
+          assert_config_rejects "$RUNNER_TEMP/empty-secret.env" POSTGRES_PASSWORD_FILE
+          mkdir -p "$RUNNER_TEMP/secret-directory"
+          cp "$DEPLOY_ENV_FILE" "$RUNNER_TEMP/directory-secret.env"
+          printf 'MINIO_ROOT_PASSWORD_FILE=%s\\n' "$RUNNER_TEMP/secret-directory" >> "$RUNNER_TEMP/directory-secret.env"
+          assert_config_rejects "$RUNNER_TEMP/directory-secret.env" MINIO_ROOT_PASSWORD_FILE
           bash scripts/validate-production-config.sh
           cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
           cat >> "$DEPLOY_ENV_FILE" <<EOF
