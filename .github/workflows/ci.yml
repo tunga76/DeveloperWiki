@@ -158,6 +158,65 @@ jobs:
               exit 1
             fi
           done
+          backup_mock_bin="$RUNNER_TEMP/backup-mock-bin"
+          mkdir -p "$backup_mock_bin"
+          cat > "$backup_mock_bin/docker" <<'EOF'
+          #!/usr/bin/env bash
+          printf 'mock postgres dump\n'
+          EOF
+          cat > "$backup_mock_bin/age" <<'EOF'
+          #!/usr/bin/env bash
+          output=""
+          while (($#)); do
+            if [[ "$1" == "--output" ]]; then output="$2"; shift 2; else shift; fi
+          done
+          cat > "$output"
+          EOF
+          cat > "$backup_mock_bin/aws" <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          if [[ "$1 $2" == "s3 cp" ]]; then
+            source="$3"
+            destination="$4"
+            size="$(wc -c < "$source" | tr -d '[:space:]')"
+            printf '%s\t%s\n' "${destination#s3://}" "$size" >> "$AWS_MOCK_STATE"
+            exit 0
+          fi
+          if [[ "$1 $2" == "s3api head-object" ]]; then
+            shift 2
+            bucket=""
+            key=""
+            while (($#)); do
+              case "$1" in
+                --bucket) bucket="$2"; shift 2 ;;
+                --key) key="$2"; shift 2 ;;
+                *) shift ;;
+              esac
+            done
+            if [[ "${AWS_MOCK_SIZE_MODE:-}" == "mismatch" ]]; then
+              printf '1\n'
+              exit 0
+            fi
+            awk -F '\t' -v object="$bucket/$key" '$1 == object { size=$2 } END { if (size == "") exit 1; print size }' "$AWS_MOCK_STATE"
+            exit 0
+          fi
+          echo "Unexpected AWS mock command" >&2
+          exit 1
+          EOF
+          chmod +x "$backup_mock_bin/docker" "$backup_mock_bin/age" "$backup_mock_bin/aws"
+          : > "$RUNNER_TEMP/backup-objects.tsv"
+          touch "$RUNNER_TEMP/backup-run.env"
+          PATH="$backup_mock_bin:$PATH" DEPLOY_ENV_FILE="$RUNNER_TEMP/backup-run.env" BACKUP_S3_URI=s3://fixture-bucket/developer-wiki AGE_RECIPIENT=age1fixture AWS_MOCK_STATE="$RUNNER_TEMP/backup-objects.tsv" bash scripts/backup-postgres-offsite.sh > "$RUNNER_TEMP/backup-success.log"
+          grep -Fq "Encrypted PostgreSQL backup uploaded:" "$RUNNER_TEMP/backup-success.log"
+          : > "$RUNNER_TEMP/backup-objects.tsv"
+          if output="$(PATH="$backup_mock_bin:$PATH" DEPLOY_ENV_FILE="$RUNNER_TEMP/backup-run.env" BACKUP_S3_URI=s3://fixture-bucket/developer-wiki AGE_RECIPIENT=age1fixture AWS_MOCK_STATE="$RUNNER_TEMP/backup-objects.tsv" AWS_MOCK_SIZE_MODE=mismatch bash scripts/backup-postgres-offsite.sh 2>&1)"; then
+            echo "Backup script accepted an uploaded object with a mismatched size" >&2
+            exit 1
+          fi
+          if [[ "$output" != *"size mismatch"* ]]; then
+            echo "Backup size mismatch failed without the expected diagnostic" >&2
+            exit 1
+          fi
           bash -n scripts/validate-production-config.sh
           bash -n scripts/smoke-deployment.sh
           while IFS='=' read -r key value; do
