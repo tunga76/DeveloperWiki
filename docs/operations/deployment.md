@@ -14,7 +14,7 @@ Bu katman Linux host üzerinde Docker Compose v2.24.4 veya sonrası içindir; ba
    - `GRAFANA_ADMIN_PASSWORD_FILE`: Grafana admin parolası.
 4. Deploy ortamında `SITE_ADDRESS`, `WEB_IMAGE`, `API_IMAGE`, tüm digest-pinned service image değerleri, `MINIO_ROOT_USER` ve beş secret dosyasının yolunu tanımlayın.
 
-`.env.production.example` değişken adlarını ve secret dosyası yol biçimini gösterir. Image digest'leri sıfırlarla doldurulmuş örnek değerlerdir ve gerçek digest'lerle değiştirilmelidir; validator tüm sekiz image digest'ini kontrol eder. Kopyasını repo dışındaki deploy env dosyasında gerçek değerlerle değiştirin.
+`.env.production.example` değişken adlarını ve secret dosyası yol biçimini gösterir. Image digest'leri sıfırlarla doldurulmuş örnek değerlerdir ve gerçek digest'lerle değiştirilmelidir; validator tüm sekiz image digest'ini kontrol eder. Secret dosyalarının okunabilir, normal dosya ve boş olmayan değerler olmasını; JWT secret'ının en az 32 karakter olmasını da config aşamasında doğrular. Kopyasını repo dışındaki deploy env dosyasında gerçek değerlerle değiştirin.
 
 Operations UI veya Alertmanager overlay'lerini etkinleştirdiyseniz ilgili Compose katmanlarını deployment komutlarına da ekleyin. UI için `compose.ops-access.yaml`, webhook teslimatı yapılandırıldıktan sonra Alertmanager için `compose.alertmanager.yaml` eklenir.
 
