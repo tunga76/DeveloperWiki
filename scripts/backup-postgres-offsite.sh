@@ -14,7 +14,7 @@ if [[ ! "$BACKUP_S3_URI" =~ ^s3://[^/[:space:]]+(/[^[:space:]]*)?$ ]]; then
   echo "BACKUP_S3_URI must be an s3://bucket/prefix destination without whitespace" >&2
   exit 1
 fi
-for command_name in docker age aws sha256sum; do
+for command_name in docker age aws sha256sum wc tr; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
     echo "Required command not found: $command_name" >&2
     exit 1
@@ -44,8 +44,18 @@ aws s3 cp "$temp_dir/$backup_name.sha256" "$destination.sha256" --only-show-erro
 destination_without_scheme="${destination#s3://}"
 bucket="${destination_without_scheme%%/*}"
 object_key="${destination_without_scheme#*/}"
-aws s3api head-object --bucket "$bucket" --key "$object_key" >/dev/null
-aws s3api head-object --bucket "$bucket" --key "$object_key.sha256" >/dev/null
+assert_remote_object_size() {
+  local key="$1" local_file="$2" object_label="$3" remote_size local_size
+  remote_size="$(aws s3api head-object --bucket "$bucket" --key "$key" --query ContentLength --output text)"
+  local_size="$(wc -c < "$local_file" | tr -d '[:space:]')"
+  if [[ ! "$remote_size" =~ ^[0-9]+$ || "$remote_size" != "$local_size" ]]; then
+    echo "Uploaded $object_label size mismatch: expected $local_size bytes, got ${remote_size:-empty}" >&2
+    exit 1
+  fi
+}
+
+assert_remote_object_size "$object_key" "$encrypted_dump" "backup object"
+assert_remote_object_size "$object_key.sha256" "$temp_dir/$backup_name.sha256" "checksum sidecar"
 
 echo "Encrypted PostgreSQL backup uploaded: $destination"
 echo "SHA-256: $checksum"
