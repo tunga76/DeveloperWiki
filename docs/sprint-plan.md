@@ -133,7 +133,7 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 
 **Release readiness devam işi 15 (2026-10-12):** Release checklist ve CI workflow yayınlanan `master` ile karşılaştırıldı. `6e619cf` commit'ine ait Actions run `38168504143` başarıyla tamamlandı: quality (fresh PostgreSQL migration, dependency audit, API tests, lint, typecheck, build), browser E2E, API/web Trivy scan, production Compose ve monitoring config job'larının tümü yeşil. Güncel checklistte CI ve production Compose yapılandırma doğrulamaları tamamlandı; gerçek production registry digest'leri ve MinIO provenance kararı ayrı açık bırakıldı. Staging, secret manager, gerçek bucket/restore, host/TLS ve operasyon sahibi girdileri operatör ortamı bekliyor.
 
-## Story örnekleri
+**Release readiness devam işi 16 (2026-10-12):** `scripts/smoke-deployment.sh` staging URL'si için HTTPS şemasını zorunlu kılar; curl istekleri TLS 1.2+ ve bağlantı/istek timeout'larıyla sınırlandırılır. Production Compose CI job'u script için `bash -n` kontrolü yapar. Bu değişiklik hostta gerçek TLS, auth ve readiness doğrulaması değildir; staging smoke maddesi açık kalır.\n\n## Story örnekleri
 
 ### E2-S1 — Kullanıcı hesabı açar
 
