@@ -229,3 +229,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 33 (2026-10-12):** Offsite backup yüklemesinden sonra script artık S3 `ContentLength` değerini yerel şifreli dump ve checksum sidecar boyutlarıyla karşılaştırıyor; sayısal olmayan veya farklı boyut hatayla duruyor. CI fake Docker/age/AWS CLI'larla başarılı yükleme ve boyut mismatch reddini çalıştıracak şekilde genişletildi. Boyut eşleşmesi tek başına içerik checksum/restore doğrulaması değildir; gerçek off-host restore tatbikatı yine gereklidir.
+
+
+**Release readiness devam işi 34 (2026-10-12):** Production Compose port policy artık yalnız container target portlarını değil, Caddy'nin public host port/protocol eşleşmesini de tam olarak 80/tcp, 443/tcp ve 443/udp ile sınırlandırıyor. CI beklenen Caddy ve loopback operations fixture'larını kabul ediyor; public API portu ve Caddy 8080 alternatifini reddediyor. Bu, published host portlarını kapsar; gerçek firewall ve host network doğrulaması yine staging'de yapılmalıdır.
