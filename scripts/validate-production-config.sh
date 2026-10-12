@@ -44,8 +44,14 @@ for name in "${secret_file_vars[@]}"; do
 done
 
 jwt_secret="$(< "$JWT_SECRET_FILE")"
+jwt_secret="${jwt_secret#"${jwt_secret%%[![:space:]]*}"}"
+jwt_secret="${jwt_secret%"${jwt_secret##*[![:space:]]}"}"
 if (( ${#jwt_secret} < 32 )); then
-  echo "JWT_SECRET_FILE must contain at least 32 characters" >&2
+  echo "JWT_SECRET_FILE must contain at least 32 non-padding characters" >&2
+  exit 1
+fi
+if [[ "$jwt_secret" == "local-development-secret-change-this-32-chars-minimum" || "$jwt_secret" == replace-this* ]]; then
+  echo "JWT_SECRET_FILE must contain a deployment-specific secret" >&2
   exit 1
 fi
 
