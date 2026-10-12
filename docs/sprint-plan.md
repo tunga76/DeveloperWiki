@@ -226,3 +226,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 32 (2026-10-12):** Backup timer için CI, `OnCalendar`, rastgele gecikme, missed-run persistence ve service binding alanlarını statik denetliyor; systemd-analyze calendar ifadesinin sözdizimini doğruluyor. Bu kontrol seçilen 02:15 örneğinin kurum RPO/bakım penceresine uygunluğunu doğrulamaz; zamanlama hâlâ operatör onayı bekler.
+
+
+**Release readiness devam işi 33 (2026-10-12):** Offsite backup yüklemesinden sonra script artık S3 `ContentLength` değerini yerel şifreli dump ve checksum sidecar boyutlarıyla karşılaştırıyor; sayısal olmayan veya farklı boyut hatayla duruyor. CI fake Docker/age/AWS CLI'larla başarılı yükleme ve boyut mismatch reddini çalıştıracak şekilde genişletildi. Boyut eşleşmesi tek başına içerik checksum/restore doğrulaması değildir; gerçek off-host restore tatbikatı yine gereklidir.
