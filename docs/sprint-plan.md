@@ -2,7 +2,7 @@
 
 **Durum:** Sprint 6 uygulama işleri tamamlandı; release readiness iyileştirmeleri sürüyor
 **Sürüm:** 0.1  
-**Tarih:** 11 Ekim 2026
+**Tarih:** 12 Ekim 2026
 
 ## Planlama varsayımları
 
@@ -130,6 +130,8 @@ Plan, 1 haftalık sprintler ve küçük ürün/mühendislik ekibi varsayımıyla
 **Release readiness devam işi 13 (2026-10-11):** Dört Prisma migration'ı disposable boş PostgreSQL 17 üzerinde uygulandı; `migrate deploy` ve ardından `migrate status` başarılı, schema up to date. Bu kontrol kalite CI job'una ephemeral PostgreSQL service ve clean-database migration step'i olarak eklendi. Staging snapshot yedeğiyle migration/rollback provası hâlâ gerçek staging verisi ve operatör prosedürü gerektiriyor.
 
 **Release readiness devam işi 14 (2026-10-11):** `ad66d71` scan diagnostic adımı her iki Trivy raporunun da üretilmediğini gösterdi; Trivy setup input'unda release sürümü `v` önekiyle bekleniyor. Workflow `v0.75.0` biçimine düzeltildi. Sonraki Actions run'ında container-scan ve eklenen clean-database migration adımı doğrulanacak.
+
+**Release readiness devam işi 15 (2026-10-12):** Release checklist ve CI workflow yayınlanan `master` ile karşılaştırıldı. `6e619cf` commit'ine ait Actions run `38168504143` başarıyla tamamlandı: quality (fresh PostgreSQL migration, dependency audit, API tests, lint, typecheck, build), browser E2E, API/web Trivy scan, production Compose ve monitoring config job'larının tümü yeşil. Yerel doküman değişikliği GitHub connector ile master'a yayınlanıyor. Staging, secret manager, gerçek bucket/restore, host/TLS, tedarik ve operasyon sahibi girdileri operatör ortamı bekliyor.
 
 ## Story örnekleri
 
