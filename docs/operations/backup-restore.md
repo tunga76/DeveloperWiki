@@ -32,7 +32,7 @@ Production Compose ve secret injection hazırlığı için [deployment runbook'u
    sudo journalctl -u developer-wiki-backup.service
    ```
 
-   Backup hesabının repo ve deployment env dosyalarında yalnız okuma/geçiş izni bulunmalıdır. Service user Docker socket'ine erişmek için host Docker group'unda olmalıdır; bu erişim hostta root-equivalent yetkidir. Bunu yalnız dedicated backup hesabına verin ve kurumun rootless Docker/backup agent standardı varsa systemd birimini ona uyarlayın. İlk manuel çalıştırma başarılı olduktan sonra `developer-wiki-backup.timer` birimini etkinleştirin. Timer günlük 02:15 ve en çok 30 dakika rastgele gecikme örneğidir; onaylı RPO, bakım penceresi ve hedef bölge saatine göre değiştirin.
+   Backup hesabının repo ve deployment env dosyalarında yalnız okuma/geçiş izni bulunmalıdır. Service user Docker socket'ine erişmek için host Docker group'unda olmalıdır; bu erişim hostta root-equivalent yetkidir. Unit ayrıca Linux capability'lerini boşaltır, setuid/setgid kullanımını ve gereksiz socket ailelerini sınırlar; bu önlemler Docker daemon API'sinin geniş host yetkisini daraltmaz. Bu erişimi yalnız dedicated backup hesabına verin. Kurumun rootless Docker veya kısıtlı backup agent standardı varsa systemd birimini ona uyarlayın. İlk manuel çalıştırma başarılı olduktan sonra `developer-wiki-backup.timer` birimini etkinleştirin. Timer günlük 02:15 ve en çok 30 dakika rastgele gecikme örneğidir; onaylı RPO, bakım penceresi ve hedef bölge saatine göre değiştirin.
 
 4. MinIO uygulama verisi saklamaya başladığında nesne yedeklemesini de ayrı hedefe ekleyin. Şu an uygulamada dosya eki akışı yok; Compose volume kopyasını tek yedek kabul etmeyin.
 
