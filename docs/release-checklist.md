@@ -14,7 +14,7 @@
 - [ ] Migration, staging verisinin yedeğiyle denenmiş; geri dönüş/ileri düzeltme prosedürü kayıtlıdır.
 - [x] `infrastructure/docker/compose.production.yaml` secret fixture'larıyla CI'da doğrulandı; yalnız Caddy 80/443'ü public yayımlar, diğer yayımlı portlar loopback'e bağlanır (run `38277681767`).
 - [ ] Gerçek production image digest'leri onaylı registry'den seçilip yayın ortamında kullanılmalı; MinIO kaynağı/provenance kararı onaylanmalı.
-- [ ] `scripts/smoke-deployment.sh` gerçek staging URL'si üzerinde TLS, web/API proxy, auth ve API/DB readiness kontrollerini geçti.
+- [ ] `scripts/smoke-deployment.sh` gerçek staging URL'si üzerinde TLS, web/API proxy, auth ve API/DB readiness kontrollerini geçti. Script, seçili operations UI/Alertmanager Compose overlay'leriyle readiness kontrolünü destekler.
 
 ## Operasyon
 
