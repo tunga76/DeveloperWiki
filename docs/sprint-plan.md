@@ -232,3 +232,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 34 (2026-10-12):** Production Compose port policy artık yalnız container target portlarını değil, Caddy'nin public host port/protocol eşleşmesini de tam olarak 80/tcp, 443/tcp ve 443/udp ile sınırlandırıyor. CI beklenen Caddy ve loopback operations fixture'larını kabul ediyor; public API portu ve Caddy 8080 alternatifini reddediyor. Bu, published host portlarını kapsar; gerçek firewall ve host network doğrulaması yine staging'de yapılmalıdır.
+
+
+**Release readiness devam işi 35 (2026-10-12):** Docker Compose 5.3.1 ile production stack ve operations overlay gerçek config renderer'ında çalıştırıldı. Base prod config Caddy için 80/tcp, 443/tcp ve 443/udp eşleşmelerini, başka servislerde public host publish olmadığını verdi; operations overlay aynı Caddy eşleşmelerini koruyup Grafana/Prometheus'u 127.0.0.1'e bağladı. Bu yerel config render'dır; policy JQ filtresi GitHub Actions'ta henüz yeşil run ile doğrulanmadı ve host firewall/staging davranışını kanıtlamaz.
