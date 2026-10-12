@@ -19,7 +19,7 @@
 ## Operasyon
 
 - [ ] Operasyon sahibi, staging/production adresleri, SLA, RPO ve RTO kararlaştırıldı.
-- [x] Şifreli off-host PostgreSQL akışı `scripts/backup-postgres-offsite.sh` ile eklendi; age şifrelemesi, checksum sidecar ve remote object check mock CLI'larla doğrulandı.
+- [x] Şifreli off-host PostgreSQL akışı `scripts/backup-postgres-offsite.sh` ile eklendi; age şifrelemesi, checksum sidecar ve remote object check mock CLI'larla doğrulandı; boş bucket, HTTPS ve whitespace içeren S3 hedefleri erken reddediliyor (CI run `38279633350`).
 - [x] Linux systemd service/timer örneği eklendi; günlük saat örneği operatörün onayladığı RPO ve bakım penceresine göre uyarlanmalı.
 - [ ] Gerçek bucket/age anahtarı ile timer, lifecycle/erişim politikası ve başarılı ilk yedek operatör ortamında yapılandırılıp doğrulanmalı. MinIO dosya eki akışı uygulamaya alındığında nesne yedeği ayrıca doğrulanmalı.
 - [x] `docs/operations/backup-restore.md` izole ortamda tatbik edildi; süre ve sonuç kaydedildi.
