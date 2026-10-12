@@ -223,3 +223,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 31 (2026-10-12):** Monitoring runbook'u mevcut optional Alertmanager overlay'iyle tutarlı hâle getirildi. Monitoring CI job'u Prometheus config/rule doğrulamasına ek olarak Grafana dashboard JSON'unda UID, dört beklenen panel ve her panelde PromQL target invariant'larını denetliyor; datasource/provider provisioning yolları da kontrol ediliyor. Bu statik doğrulama Grafana'nın canlı provision edildiğini veya Alertmanager webhook'unun teslim edildiğini kanıtlamaz.
+
+
+**Release readiness devam işi 32 (2026-10-12):** Backup timer için CI, `OnCalendar`, rastgele gecikme, missed-run persistence ve service binding alanlarını statik denetliyor; systemd-analyze calendar ifadesinin sözdizimini doğruluyor. Bu kontrol seçilen 02:15 örneğinin kurum RPO/bakım penceresine uygunluğunu doğrulamaz; zamanlama hâlâ operatör onayı bekler.
