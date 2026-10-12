@@ -139,13 +139,19 @@ jobs:
           grep -qx 'AmbientCapabilities=' infrastructure/systemd/developer-wiki-backup.service
           grep -qx 'RestrictSUIDSGID=true' infrastructure/systemd/developer-wiki-backup.service
           grep -qx 'RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6' "$backup_unit"
+          backup_timer="infrastructure/systemd/developer-wiki-backup.timer"
+          grep -qx 'OnCalendar=*-*-* 02:15:00' "$backup_timer"
+          grep -qx 'RandomizedDelaySec=30m' "$backup_timer"
+          grep -qx 'Persistent=true' "$backup_timer"
+          grep -qx 'Unit=developer-wiki-backup.service' "$backup_timer"
+          backup_calendar="$(sed -n 's/^OnCalendar=//p' "$backup_timer")"
+          systemd-analyze calendar "$backup_calendar" >/dev/null
           touch "$RUNNER_TEMP/backup-validation.env"
           sed -e "s|^WorkingDirectory=.*|WorkingDirectory=$GITHUB_WORKSPACE|" \
             -e "s|^EnvironmentFile=.*|EnvironmentFile=$RUNNER_TEMP/backup-validation.env|" \
             -e "s|^ExecStart=.*|ExecStart=/usr/bin/bash $GITHUB_WORKSPACE/scripts/backup-postgres-offsite.sh|" \
             -e '/^User=/d' -e '/^Group=/d' "$backup_unit" > "$RUNNER_TEMP/developer-wiki-backup.service"
           systemd-analyze verify "$RUNNER_TEMP/developer-wiki-backup.service"
-          touch "$RUNNER_TEMP/backup-validation.env"
           for backup_uri in "s3:///missing-bucket" "https://example.invalid/backups" "s3://bucket/path with-space"; do
             if DEPLOY_ENV_FILE="$RUNNER_TEMP/backup-validation.env" BACKUP_S3_URI="$backup_uri" AGE_RECIPIENT=age1fixture bash scripts/backup-postgres-offsite.sh; then
               echo "Backup script accepted invalid destination: $backup_uri" >&2
