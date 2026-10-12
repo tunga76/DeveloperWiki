@@ -58,3 +58,5 @@ Gerçek staging/production ortamı veya secret manager bağlantısı bu reposito
 - Backup systemd service script'i doğrudan çalıştırmak yerine `/usr/bin/bash` ile çağırır; script executable bit'ine bağlı değildir. CI beklenen komut satırını denetler.
 
 - Monitoring CI Grafana dashboard JSON yapısını ve datasource/provider konfigürasyon işaretlerini kontrol eder. Gerçek Grafana erişimi ve Alertmanager receiver teslimi staging üzerinde doğrulanacak.
+
+- Son `master` güncellemelerinin push-triggered Actions run sonucu bu GitHub bağlantısından görüntülenemedi; yeni systemd/Grafana CI adımları yeşil run ile henüz teyit edilmiş sayılmaz.
