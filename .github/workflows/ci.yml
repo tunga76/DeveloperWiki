@@ -183,6 +183,11 @@ jobs:
             echo "Production config accepted a placeholder JWT secret" >&2
             exit 1
           fi
+          printf 'local-development-secret-change-this-32-chars-minimum' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
+          if bash scripts/validate-production-config.sh; then
+            echo "Production config accepted the local development JWT default" >&2
+            exit 1
+          fi
           printf 'ci-validation-jwt-secret-at-least-32-chars' > "$RUNNER_TEMP/developer-wiki-secrets/jwt"
           bash scripts/validate-production-config.sh
           cp infrastructure/monitoring/alertmanager.yml.example "$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml"
