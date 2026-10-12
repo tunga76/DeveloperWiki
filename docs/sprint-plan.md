@@ -202,3 +202,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 24 (2026-10-12):** Production config validator, JWT secret dosyasını uygulamanın `trim()` davranışıyla aynı şekilde kırpıyor; böylece whitespace ile şişirilmiş kısa secret preflight'ten geçemiyor. Ayrıca uygulamanın reddettiği varsayılan local secret ve `replace-this` placeholder prefix'i deployment öncesi reddediliyor. CI kısa, whitespace ile şişirilmiş, local-default ve placeholder secret vakalarını reddedip geçerli fixture'ı kabul edecek şekilde kapsıyor. Gerçek credential rotasyonu/secret manager uygulaması operatör girdisi olmaya devam eder.
+
+
+**Release readiness devam işi 25 (2026-10-12):** Production config validator deploy env dosyası için normal dosya/okunabilirlik şartı koyuyor. CI’da eksik secret yolu, boş secret dosyası ve dosya yerine dizin negatif senaryoları; hata çıktısında değerlerin gösterilmemesiyle birlikte kapsanıyor. Bu testlerin push-triggered run sonucu GitHub bağlantısından görünür değil.
