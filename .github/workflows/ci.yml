@@ -183,6 +183,34 @@ jobs:
           ALERTMANAGER_CONFIG_FILE=$RUNNER_TEMP/developer-wiki-secrets/alertmanager.yml
           EOF
           bash scripts/validate-production-config.sh
+          smoke_bin="$RUNNER_TEMP/smoke-bin"
+          mkdir -p "$smoke_bin"
+          cat > "$smoke_bin/curl" <<'EOF'
+          #!/usr/bin/env bash
+          case "$*" in
+            *--dump-header*)
+              printf 'HTTP/2 200\\r\\nStrict-Transport-Security: max-age=31536000\\r\\nX-Content-Type-Options: nosniff\\r\\nX-Frame-Options: DENY\\r\\nReferrer-Policy: strict-origin-when-cross-origin\\r\\nPermissions-Policy: camera=(), microphone=(), geolocation=()\\r\\n'
+              ;;
+            *--write-out*'/api/v1/auth/me'*) printf '401' ;;
+            *--write-out*) printf '200' ;;
+          esac
+          EOF
+          cat > "$smoke_bin/docker" <<'EOF'
+          #!/usr/bin/env bash
+          printf '%s\\n' "$*" > "$DOCKER_ARGS_FILE"
+          EOF
+          chmod +x "$smoke_bin/curl" "$smoke_bin/docker"
+          smoke_env="$RUNNER_TEMP/smoke.env"
+          touch "$smoke_env"
+          PATH="$smoke_bin:$PATH" SITE_URL=https://wiki.example.test DEPLOY_ENV_FILE="$smoke_env" DOCKER_ARGS_FILE="$RUNNER_TEMP/default-compose-args" bash scripts/smoke-deployment.sh
+          if grep -Eq 'compose\\.(ops-access|alertmanager)\\.yaml' "$RUNNER_TEMP/default-compose-args"; then
+            echo "Default smoke unexpectedly enabled an optional Compose overlay" >&2
+            exit 1
+          fi
+          printf 'ENABLE_OPS_UI=true\\nENABLE_ALERTMANAGER=true\\n' > "$smoke_env"
+          PATH="$smoke_bin:$PATH" SITE_URL=https://wiki.example.test DEPLOY_ENV_FILE="$smoke_env" DOCKER_ARGS_FILE="$RUNNER_TEMP/overlay-compose-args" bash scripts/smoke-deployment.sh
+          grep -Fq "$PWD/infrastructure/docker/compose.ops-access.yaml" "$RUNNER_TEMP/overlay-compose-args"
+          grep -Fq "$PWD/infrastructure/docker/compose.alertmanager.yaml" "$RUNNER_TEMP/overlay-compose-args"
 
   monitoring-config:
     runs-on: ubuntu-latest
