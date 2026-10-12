@@ -10,7 +10,7 @@ Prometheus scrapes the API every 15 seconds. `infrastructure/monitoring/alerts.y
 
 These are starting values. Review them against staging traffic before treating them as SLOs. The latency summary is a mean, not a percentile; API instrumentation does not currently expose histogram buckets.
 
-Prometheus alert rules create firing/pending state in Prometheus, but this repository does not configure Alertmanager or an external notification receiver. Operators must select and configure an approved incident channel and assign an on-call owner before release. The production Compose layer keeps Grafana and Prometheus off public host ports; provide access through the organization's protected operations network or a controlled SSH tunnel.
+Prometheus alert rules create firing/pending state in Prometheus. The optional `compose.alertmanager.yaml` overlay enables Alertmanager routing; `alertmanager.yml.example` is only a reserved `.invalid` placeholder and must be replaced with an approved receiver config before enabling it. Operators must select and configure an approved incident channel, verify delivery, and assign an on-call owner before release. The production Compose layer keeps Grafana and Prometheus off public host ports; provide access through the organization's protected operations network or a controlled SSH tunnel.
 
 ## Protected operations access
 
