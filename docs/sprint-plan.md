@@ -208,3 +208,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 26 (2026-10-12):** CI preflight hata testleri, eksik JWT secret-file değişkeni ve bozuk image digest'ini sentinel değerlerle dener; doğrulayıcının ilgili değişken adını verip supplied value'yu hata çıktısına taşımadığını kontrol eder. Push-triggered Actions çalışmasının sonucu mevcut GitHub entegrasyonundan okunamadı.
+
+
+**Release readiness devam işi 27 (2026-10-12):** Alertmanager overlay açıldığında config validator dosyanın normal/okunabilir ve boş olmayan config olmasını, reserved `.invalid` endpoint içermemesini ve aynı runtime release'inden `amtool` ile UTF-8 strict config check'ini şart koşuyor. CI amtool 0.34.1 release arşivini resmi SHA-256 checksum ile doğrulayarak kuruyor; valid `.test` receiver fixture'ını ve missing/empty/directory/reserved/invalid config negatif vakalarını kullanıyor. Bu statik/config doğrulaması gerçek webhook teslimat testi değildir.
