@@ -214,3 +214,6 @@ Sprint kapasitesi ve ilk implementasyon öncesi alınması gereken ürün kararl
 
 
 **Release readiness devam işi 28 (2026-10-12):** Offsite backup systemd unit'i capability bounding set ve ambient capabilities'i boşaltacak, setuid/setgid kullanımını kapatacak ve UNIX/IPv4/IPv6 socket ailelerini allowlist edecek şekilde daraltıldı. Backup CI job'u bu privilege policy'yi statik olarak zorunlu kılıyor. Bu, servis sürecinin yerel Linux yetkilerini azaltır; Docker grubunun host root-equivalent daemon erişimini çözmez. Runbook bu sınırı ve rootless/backup-agent alternatifi netleştiriyor. Unit gerçek hostta çalıştırılmadığından systemd sürümü/daemon davranışı hedef işletim sisteminde ayrıca doğrulanmalı.
+
+
+**Release readiness devam işi 29 (2026-10-12):** Backup service policy CI kapsamı satır eşleşmelerine ek olarak `systemd-analyze verify` ile Ubuntu runner üzerinde unit parser doğrulamasını çalıştıracak şekilde genişletildi. CI geçici bir unit kopyasında runner'a özgü çalışma dizini, env dosyası ve script yolunu kullanıyor; `User`/`Group` alanlarını runner kimlik veritabanına bağlı olduklarından parser kopyasından çıkarırken gerçek unit'teki değerleri ayrıca statik denetliyor. Bu check systemd unit syntax/config doğrulamasıdır; gerçek hostta servis ve Docker socket çalışma testi değildir.
